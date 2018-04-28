@@ -1,0 +1,23 @@
+{
+  "name": "react-miniapp",
+  "version": "0.0.1",
+  "description": "tool for transfer react project to miniapp",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PepperYan/react-miniapp.git"
+  },
+  "keywords": [
+    "react",
+    "miniapp"
+  ],
+  "author": "hibad",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PepperYan/react-miniapp/issues"
+  },
+  "homepage": "https://github.com/PepperYan/react-miniapp#readme"
+}

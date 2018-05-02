@@ -29,7 +29,7 @@ describe('transformjs 代码转换',function(){
   //   console.log(JSON.stringify(ast));
   // })
   describe('JSX转换', function(){
-    var ast = transform(testJSX);
+    var ast = transform(testCode);
     console.log(t.jSXIdentifier("hello"));
     
   })

@@ -1,7 +1,14 @@
+const wxTag = require('../../wx/tag')
+const ConvertJSXOpeningElement = require('./common').ConvertJSXOpeningElement
+
 module.exports = {
   JSXOpeningElement:{
-    enter(path) {
-      console.log("hello")
+    enter(path){
+      ConvertJSXOpeningElement(path);
+    },
+    exit(path) {
+      const tag = path.node.name.name;
+
     }
   }
 }

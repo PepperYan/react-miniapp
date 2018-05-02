@@ -4,7 +4,7 @@
   "description": "tool for transfer react project to miniapp",
   "main": "lib/index.js",
   "scripts": {
-    "test": "test"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -19,5 +19,16 @@
   "bugs": {
     "url": "https://github.com/PepperYan/react-miniapp/issues"
   },
-  "homepage": "https://github.com/PepperYan/react-miniapp#readme"
+  "homepage": "https://github.com/PepperYan/react-miniapp#readme",
+  "dependencies": {
+    "@babel/core": "^7.0.0-beta.46",
+    "@babel/generator": "^7.0.0-beta.46",
+    "@babel/preset-env": "^7.0.0-beta.46",
+    "@babel/register": "^7.0.0-beta.46",
+    "@babel/traverse": "^7.0.0-beta.46",
+    "@babel/types": "^7.0.0-beta.46"
+  },
+  "devDependencies": {
+    "mocha": "^5.1.1"
+  }
 }

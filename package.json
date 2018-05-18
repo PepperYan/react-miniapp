@@ -29,6 +29,7 @@
     "@babel/types": "^7.0.0-beta.46"
   },
   "devDependencies": {
-    "mocha": "^5.1.1"
+    "mocha": "^5.1.1",
+    "power-assert": "^1.5.0"
   }
 }

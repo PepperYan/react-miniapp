@@ -13,6 +13,13 @@ function parseCode(code){
 }
 
 function transform(code){
+  let outPut = {
+    wxml:'',
+    wxss:'',
+    js:'',
+    json:'',
+    type:''//page||component
+  }
   const ast = parseCode(code);
   // const plugin = Object.assign({}, visitor)
   traverse(ast, transformPlugin);

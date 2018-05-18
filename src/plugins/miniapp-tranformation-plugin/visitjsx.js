@@ -8,7 +8,6 @@ module.exports = {
     },
     exit(path) {
       const tag = path.node.name.name;
-
     }
   }
 }

@@ -23,7 +23,7 @@ function transform(code){
   }
   const ast = parseCode(code);
   // const plugin = Object.assign({}, visitor)
-  // traverse(ast, transformPlugin);
+  traverse(ast, transformPlugin);
   return ast;
 }
 

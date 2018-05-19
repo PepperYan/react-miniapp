@@ -13,7 +13,6 @@ describe('transformjs 代码转换',function(){
   // it('JSX转换', function(){
   //   var ast = transform(testJSX);
   //   console.log(t.jSXIdentifier("hello"));
-    
   // })
 
   it("JSX 事件", function(){

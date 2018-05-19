@@ -1,3 +1,4 @@
+var t = require('@babel/types');
 const wxTag = require('../../wx/tag')
 const ConvertJSXOpeningElement = require('./common').ConvertJSXOpeningElement
 

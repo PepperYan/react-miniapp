@@ -1,5 +1,6 @@
 const babylon = require('babylon');
 const traverse = require('@babel/traverse').default
+const generate = require('@babel/generator').default
 const transformPlugin = require('./plugins/miniapp-tranformation-plugin');
 
 function parseCode(code){
@@ -18,11 +19,12 @@ function transform(code){
     wxss:'',
     js:'',
     json:'',
-    type:''//page||component
+    type:''//App||page||component
   }
   const ast = parseCode(code);
   // const plugin = Object.assign({}, visitor)
-  traverse(ast, transformPlugin);
+  // traverse(ast, transformPlugin);
+  return ast;
 }
 
 module.exports = {

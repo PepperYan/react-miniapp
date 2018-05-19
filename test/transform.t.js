@@ -1,7 +1,7 @@
 var assert = require('assert');
 var transform = require('../src/transform').transform
 var parseCode = require('../src/transform').parseCode
-
+const generate = require('@babel/generator').default
 var t = require('@babel/types')
 const Codes = require('./testCode');
 
@@ -18,6 +18,8 @@ describe('transformjs 代码转换',function(){
 
   it("JSX 事件", function(){
     const ast = transform(testJSXEvent)
-    console.log(ast);
+    const result = generate(ast);
+    console.log(result);
+    
   })
 });

@@ -1,5 +1,6 @@
 const sharedState = require('./sharedState');
 var t = require('@babel/types');
+const generate = require('@babel/generator').default
 
 const componentLiftMethods = {
   created: 1,
@@ -28,9 +29,11 @@ module.exports = {
       path.remove()
     }
   },
+  ImportDeclaration(path){
+    console.log(path.node);
+  },
   ClassMethod: {
     enter(path) {
-      console.log(path.node);
       const methodName = path.node.key.name;
       //构造method的ast节点
       const fn = t.ObjectProperty(
@@ -41,7 +44,16 @@ module.exports = {
       sharedState.methods.push(fn);
     },
     exit(path) {
-      
+      const methodName = path.node.key.name;
+      if (methodName === 'render') { //当render域里有赋值时, BlockStatement下面有的不是returnStatement,而是VariableDeclaration
+        const wxmlAST = path.node.body.body.find(i => i.type === 'ReturnStatement');
+        // TODO 使用Dom el转换,而不是直接用小程序el转换
+        const wxml = generate(wxmlAST.argument).code;
+        sharedState.output = wxml;
+        console.log(wxml)
+        
+        path.remove();
+      }
     }
   }
 }

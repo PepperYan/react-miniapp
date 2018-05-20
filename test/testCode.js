@@ -15,10 +15,9 @@ const testJSX1 =  "class A extends Component {"+
 const testJSXEvent = "class A extends Component {"+
 "onClick(){console.log('test click')}"+
 "render() {"+
-  "let { msg } = this.props.hello"+
   "return ("+
     '<div className="app" onClick={this.onClick} style={{posistion:"relative"}}>'+
-      '<img className="logo" src={msg}/>'+
+      // '<img className="logo" src={this.props.hello.msg}/>'+
     '</div>'+
   ')'+
 '}'+

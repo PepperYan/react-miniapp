@@ -18,7 +18,7 @@ describe('transformjs 代码转换',function(){
   it("JSX 事件", function(){
     const ast = transform(testJSXEvent)
     const result = generate(ast);
-    console.log(result);
+    // console.log(result);
     
   })
 });

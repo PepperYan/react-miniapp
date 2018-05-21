@@ -27,7 +27,7 @@ module.exports = {
   textarea: 1,
   navigator: 1,
   audio: 1,
-  image: 1,
+  image: 'image',
   video: 1,
   camera: 1,
   'live-player': 1,
@@ -38,4 +38,5 @@ module.exports = {
   'web-view': 1,
   slot: 1,
   div: 'view',
+  img: 'image'
 }

@@ -5,9 +5,8 @@ const chalk = require('chalk').default;
 const wxTags = require('./wx/tag');
 
 module.exports = {
-  ConvertJSXOpeningElement: function(path){
-    
-    path.node.attributes.forEach(attr => {
+  convertJSXOpeningElement: function(path){
+      path.node.attributes.forEach(attr => {
       const originName = attr.name.name;
       const attrName = attr.name.name.toLowerCase();
       if(WXML_EVENTS[attrName]){
@@ -17,7 +16,7 @@ module.exports = {
         if (t.isCallExpression(attr.value.expression) || t.isArrowFunctionExpression(attr.value.expression)) {
             const warningCode = generate(attr.value.expression).code
             console.log(
-              `警告：小程序不支持在模板中使用function/arrow function，因此 '${warningCode}' 不会被编译`
+              `小程序不支持在模板中使用function/arrow function，因此 '${warningCode}' 不会被编译`
             );
         }
         attr.value = t.stringLiteral(funName);
@@ -33,5 +32,12 @@ module.exports = {
         attr.value = t.stringLiteral(`${tempAttrs}`);
       }
     });
+  },
+  convertJSXExpressionContainer(path) {
+    if(t.isJSXAttribute(path.parent)) { //<img src={this.props.imgSrc}>
+      const varibleName = generate(path.node.expression).code;
+      path.replaceWith(t.stringLiteral(`{{${varibleName}}}`));
+      return
+    }
   }
 }

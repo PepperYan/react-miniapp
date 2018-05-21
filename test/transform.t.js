@@ -8,21 +8,21 @@ const Codes = require('./testCode');
 const testJSX = Codes.testJSX;
 const testJSXEvent = Codes.testJSXEvent
 
-describe('transformjs 代码转换',function(){
+describe('transformjs 代码转换',function() {
  
   // it('JSX转换', function(){
   //   var ast = transform(testJSX);
   //   console.log(t.jSXIdentifier("hello"));
   // })
 
-  it("JSX 事件", function(){
+  it("JSX 事件", function() {
     const result = transform(testJSXEvent)
     // const result = generate(ast);
     console.log(result);
     
   })
 
-  it('只编译JSX',function(){
-
+  it('JSX props',function() {
+    const result = transform(Codes.testProps)
   })
 });

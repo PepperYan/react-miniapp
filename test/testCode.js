@@ -1,12 +1,11 @@
 const testClz = "Class A extends Page{}"
 
 //测试标签attr
-const testJSX1 =  "class A extends Component {"+
+const testProps =  "class A extends App {"+
 "render() {"+
-  "let { msg } = this.props.hello"+
   "return ("+
     '<div className="app">'+
-      '<img className="logo" src={msg}/>'+
+    '<img className="logo" src={this.props.hello.msg}/>'+
     '</div>'+
   ')'+
 '}'+
@@ -17,7 +16,7 @@ const testJSXEvent = "class A extends Component {"+
 "render() {"+
   "return ("+
     '<div className="app" onClick={this.onClick} style={{posistion:"relative"}}>'+
-      // '<img className="logo" src={this.props.hello.msg}/>'+
+      '<img className="logo" src={this.props.hello.msg}/>'+
     '</div>'+
   ')'+
 '}'+
@@ -45,7 +44,7 @@ var testJSX = "class A extends Component {"+
 module.exports = {
   testClz,
   testJSX,
-  testJSX1,
+  testProps,
   testPureJSX,
   testJSXEvent
 }

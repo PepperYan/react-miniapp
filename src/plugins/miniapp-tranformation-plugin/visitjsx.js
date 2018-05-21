@@ -1,20 +1,22 @@
 var t = require('@babel/types');
 const wxTags = require('./wx/tag')
-const ConvertJSXOpeningElement = require('./common').ConvertJSXOpeningElement
+const common = require('./common');
 
 module.exports = {
-  JSXOpeningElement:{
-    enter(path){
-      // console.log(path.node)
+  JSXExpressionContainer(path) {
+    common.convertJSXExpressionContainer(path);
+  },
+  JSXOpeningElement: {
+    enter(path) {
       path.node.name = t.identifier(wxTags[path.node.name.name]);
-      ConvertJSXOpeningElement(path);
+      common.convertJSXOpeningElement(path);
     },
     exit(path) {
       const tag = path.node.name.name;
     }
   },
-  JSXClosingElement: function(path){
-    if(!path.node.selfClosing){
+  JSXClosingElement: function(path) {
+    if (!path.node.selfClosing) {
       const tag = path.node.name.name;
       path.node.name = t.identifier(wxTags[tag]);
     }

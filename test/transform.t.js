@@ -19,10 +19,10 @@ describe('transformjs 代码转换',function() {
     const result = transform(testJSXEvent)
     // const result = generate(ast);
     console.log(result);
-    
   })
 
   it('JSX props',function() {
     const result = transform(Codes.testProps)
+    console.log(result);
   })
 });

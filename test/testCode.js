@@ -6,6 +6,8 @@ const testProps =  "class A extends App {"+
   "return ("+
     '<div className="app">'+
     '<img className="logo" src={this.props.hello.msg}/>'+
+    '{this.props.children}'+
+    '{1+2}'+
     '</div>'+
   ')'+
 '}'+

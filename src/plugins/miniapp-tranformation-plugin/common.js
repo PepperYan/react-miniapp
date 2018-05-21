@@ -24,8 +24,8 @@ module.exports = {
       if(attrName === 'style'){
         let tempAttrs = ''
         attr.value.expression.properties.forEach(style => {
-          const key = generate(style.key).code;
-          // TODO 未支持变量
+          const key = generate(style.key).code;``
+          // TODO 未支持变量转换 'position:{{p}}'
           const value = style.value.value;
           tempAttrs += `${key}:${value}`;
         })
@@ -38,6 +38,19 @@ module.exports = {
       const varibleName = generate(path.node.expression).code;
       path.replaceWith(t.stringLiteral(`{{${varibleName}}}`));
       return
+    }
+    if(
+      t.isMemberExpression(path.node.expression)|| //{this.props.children}
+      // t.isIdentifier(path.node.expression)||  //{}
+      t.isBinaryExpression(path.node.expression)  //{1+2}
+    ){
+      const code = generate(path.node.expression).code
+      if(code === 'this.props.children'){
+        const openningTag = t.jsxOpeningElement(t.jsxIdentifier('slot'), [], true);
+        path.replaceWith(openningTag);
+      }else{
+        path.node.expression = t.identifier(`{${code}}`);
+      }
     }
   }
 }

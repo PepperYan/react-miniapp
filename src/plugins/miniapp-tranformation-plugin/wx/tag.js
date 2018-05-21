@@ -36,7 +36,7 @@ module.exports = {
   canvas: 1,
   'open-data': 1,
   'web-view': 1,
-  slot: 1,
+  slot: 'slot',
   div: 'view',
   img: 'image'
 }

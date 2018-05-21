@@ -22,7 +22,7 @@ describe('transformjs 代码转换',function(){
     
   })
 
-  // it('只编译JSX',function(){
+  it('只编译JSX',function(){
 
-  // })
+  })
 });

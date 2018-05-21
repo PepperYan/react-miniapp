@@ -1,6 +1,7 @@
 const babylon = require('babylon');
 const traverse = require('@babel/traverse').default
 const generate = require('@babel/generator').default
+var t = require('@babel/types');
 const transformPlugin = require('./plugins/miniapp-tranformation-plugin');
 const sharedState = require('./plugins/miniapp-tranformation-plugin/sharedState');
 
@@ -15,7 +16,7 @@ function parseCode(code){
 }
 
 function transform(code){
-  let outPut = {
+  let output = {
     wxml:'',
     wxss:'',
     js:'',
@@ -27,7 +28,12 @@ function transform(code){
   
   // const plugin = Object.assign({}, visitor)
   traverse(ast, transformPlugin);
-  return sharedState.output;
+  output = sharedState.output;
+  
+  const obj = t.objectExpression(sharedState.methods);
+  output.js = generate(obj).code;
+
+  return output;
 }
 
 module.exports = {

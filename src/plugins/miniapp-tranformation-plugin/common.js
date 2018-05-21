@@ -21,7 +21,6 @@ module.exports = {
             );
         }
         attr.value = t.stringLiteral(funName);
-        // console.log(attr.value);
       }
       if(attrName === 'style'){
         let tempAttrs = ''
@@ -29,7 +28,6 @@ module.exports = {
           const key = generate(style.key).code;
           // TODO 未支持变量
           const value = style.value.value;
-          // console.log(style.value.value);
           tempAttrs += `${key}:${value}`;
         })
         attr.value = t.stringLiteral(`${tempAttrs}`);

@@ -36,6 +36,8 @@ module.exports = {
   ClassMethod: {
     enter(path) {
       const methodName = path.node.key.name;
+      if (methodName === 'render') return
+      
       //构造method的ast节点
       const fn = t.ObjectProperty(
         t.identifier(methodName),

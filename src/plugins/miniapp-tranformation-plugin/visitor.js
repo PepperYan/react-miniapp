@@ -30,7 +30,8 @@ module.exports = {
     }
   },
   ImportDeclaration(path){
-    console.log(path.node);
+    const source = path.node.source.value
+    console.log(source);
   },
   ClassMethod: {
     enter(path) {
@@ -49,9 +50,7 @@ module.exports = {
         const wxmlAST = path.node.body.body.find(i => i.type === 'ReturnStatement');
         // TODO 使用Dom el转换,而不是直接用小程序el转换
         const wxml = generate(wxmlAST.argument).code;
-        sharedState.output = wxml;
-        console.log(wxml)
-        
+        sharedState.output.wxml = wxml;
         path.remove();
       }
     }

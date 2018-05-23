@@ -8,7 +8,6 @@ module.exports = {
   },
   JSXOpeningElement: {
     enter(path) {
-      path.node.name = t.identifier(wxTags[path.node.name.name]);
       common.convertJSXOpeningElement(path);
     },
     exit(path) {

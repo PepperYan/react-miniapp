@@ -1,13 +1,74 @@
 const t = require('@babel/types');
 const generate = require('@babel/generator').default;
-const WXML_EVENTS = require('./wx/events');
+const traverse = require('@babel/traverse').default
 const chalk = require('chalk').default;
+const WXML_EVENTS = require('./wx/events');
 const wxTags = require('./wx/tag');
+const parseCode = require('./utils').parseCode
 
 
-module.exports = {
+let cache = {};
+
+function getMapVisitor(){
+  return {
+    CallExpression(path){
+      cache.object = generate(path.node.callee.object).code;
+    },
+    ReturnStatement:{
+      exit(path){
+        if(path.node){
+          // console.log(path.node)
+          const result = generate(path.node.argument).code;
+          cache.return = result;
+        }
+      }
+    },
+    FunctionExpression(path) {
+      path.node.params.forEach((arg, index) => {
+          if (index === 0) cache.item = generate(arg).code
+          if (index === 1) cache.index = generate(arg).code
+      })
+    },
+    ArrowFunctionExpression(path) {
+      path.node.params.forEach((arg, index) => {
+          if (index === 0) that.item = generate(arg).code
+          if (index === 1) that.index = generate(arg).code
+      })
+    },
+    JSXOpeningElement:{
+      enter(path){
+        // console.log(path.parent);
+        const tag = path.parent.openingElement.name.name;
+        // TODO 处理key
+
+        const jsx = t.jsxOpeningElement(t.jsxIdentifier(wxTags[tag]),[
+          t.jSXAttribute(t.jSXIdentifier('wx:for'), t.stringLiteral(`{{${cache.object}}}`)),
+          t.jSXAttribute(t.jSXIdentifier('wx:for-item'), t.stringLiteral(`{{${cache.item}}}`)),
+          t.jSXAttribute(t.jSXIdentifier('wx:for-index'), t.stringLiteral(`{{${cache.index}}}`)),
+        ])
+
+        path.parent.openingElement = jsx;
+      },
+      exit(path){
+        common.convertJSXOpeningElement(path);
+      }
+    },
+    JSXExpressionContainer(path){
+      common.convertJSXExpressionContainer(path);
+    },
+    JSXClosingElement(path){
+      if (!path.node.selfClosing) {
+        path.node.name = t.identifier(wxTags[path.node.name.name]);
+      }
+    }
+  }
+}
+
+
+const common = {
   convertJSXOpeningElement: function(path){
-      path.node.attributes.forEach((attr, index) => {
+    path.node.name = t.identifier(wxTags[path.node.name.name]);
+    path.node.attributes.forEach((attr, index) => {
       const originName = attr.name.name;
       const attrName = attr.name.name.toLowerCase();
       if(attrName === 'classname'){ // 转换className到class
@@ -60,13 +121,20 @@ module.exports = {
       return
     }
     if(t.isJSXExpressionContainer(path.node)){
-      console.log(path.node.expression);
-      if(path.node.expression.callee.object.map){
-        console.log(this.parseCode);
+      if(path.node.expression.callee.property.name === 'map'){
+        const mapAST = parseCode(generate(path.node.expression).code)
+        traverse(mapAST, getMapVisitor.call(this));
+        path.replaceWith(t.identifier(cache.return));
+        cache = {}
       }else{
         path.remove();
       }
     }
   },
-  
+
 }
+
+
+
+
+module.exports = Object.assign({},common,{getMapVisitor});

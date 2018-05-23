@@ -1,15 +1,20 @@
-const t = require('@babel/types')
-const generate = require('@babel/generator').default
+const t = require('@babel/types');
+const generate = require('@babel/generator').default;
 const WXML_EVENTS = require('./wx/events');
 const chalk = require('chalk').default;
 const wxTags = require('./wx/tag');
 
+
 module.exports = {
   convertJSXOpeningElement: function(path){
-      path.node.attributes.forEach(attr => {
+      path.node.attributes.forEach((attr, index) => {
       const originName = attr.name.name;
       const attrName = attr.name.name.toLowerCase();
-      if(WXML_EVENTS[attrName]){
+      if(attrName === 'classname'){ // 转换className到class
+        path.node.attributes[index] = t.jsxAttribute(t.jsxIdentifier('class'), t.stringLiteral('app'));
+        return;
+      }
+      if(WXML_EVENTS[attrName]){ // 事件转换
         //映射事件
         attr.name = t.identifier(WXML_EVENTS[attrName]);
         const funName = generate(attr.value.expression.property).code;
@@ -20,8 +25,9 @@ module.exports = {
             );
         }
         attr.value = t.stringLiteral(funName);
+        return;
       }
-      if(attrName === 'style'){
+      if(attrName === 'style'){ // 样式转换
         let tempAttrs = ''
         attr.value.expression.properties.forEach(style => {
           const key = generate(style.key).code;``
@@ -51,6 +57,16 @@ module.exports = {
       }else{
         path.node.expression = t.identifier(`{${code}}`);
       }
+      return
     }
-  }
+    if(t.isJSXExpressionContainer(path.node)){
+      console.log(path.node.expression);
+      if(path.node.expression.callee.object.map){
+        console.log(this.parseCode);
+      }else{
+        path.remove();
+      }
+    }
+  },
+  
 }

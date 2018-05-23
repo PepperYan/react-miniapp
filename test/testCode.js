@@ -25,7 +25,19 @@ const testJSXEvent = "class A extends Component {"+
 '}'
 
 //测试纯JSX编译
-const testPureJSX = "<template></template>"
+const testMap = "class A extends Component {"+
+"constructor(props){ this.state = { users:[ {id:1}, {id:2} ] } }"+
+"render() {"+
+  "return ("+
+  '<div className="app">'+
+        '{ this.state.users.map(function(user){'+
+             'return <div>{user.id}</div>'+
+          '})'+
+        '}'+
+      '</div>'+
+  ')'+
+'}'+
+'}'
 
 //
 var testJSX = "class A extends Component {"+
@@ -47,6 +59,6 @@ module.exports = {
   testClz,
   testJSX,
   testProps,
-  testPureJSX,
+  testMap,
   testJSXEvent
 }

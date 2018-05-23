@@ -17,12 +17,16 @@ describe('transformjs 代码转换',function() {
 
   it("JSX 事件", function() {
     const result = transform(testJSXEvent)
-    // const result = generate(ast);
-    console.log(result);
+    // console.log(result);
   })
 
   it('JSX props',function() {
     const result = transform(Codes.testProps)
+    // console.log(result);
+  })
+
+  it('JSX map', function(){
+    const result = transform(Codes.testMap);
     console.log(result);
   })
 });

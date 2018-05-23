@@ -1,19 +1,9 @@
-const babylon = require('babylon');
 const traverse = require('@babel/traverse').default
 const generate = require('@babel/generator').default
 var t = require('@babel/types');
 const transformPlugin = require('./plugins/miniapp-tranformation-plugin');
 const sharedState = require('./plugins/miniapp-tranformation-plugin/sharedState');
-
-function parseCode(code) {
-  var options = {
-    babelrc: false,
-    sourceType: 'module',
-    plugins: ['jsx', 'objectRestSpread', 'classProperties'],
-  }
-
-  return babylon.parse(code, options);
-}
+const parseCode = require('./plugins/miniapp-tranformation-plugin/utils').parseCode;
 
 function transform(code) {
   let output = {

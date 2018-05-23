@@ -1,6 +1,7 @@
 const sharedState = require('./sharedState');
 var t = require('@babel/types');
 const generate = require('@babel/generator').default
+const prettifyXml = require('./utils').prettifyXml
 
 const componentLiftMethods = {
   created: 1,
@@ -52,7 +53,7 @@ module.exports = {
         const wxmlAST = path.node.body.body.find(i => i.type === 'ReturnStatement');
         // TODO 使用Dom el转换,而不是直接用小程序el转换
         const wxml = generate(wxmlAST.argument).code;
-        sharedState.output.wxml = wxml;
+        sharedState.output.wxml = wxmlAST && prettifyXml(wxml)
         path.remove();
       }
     }

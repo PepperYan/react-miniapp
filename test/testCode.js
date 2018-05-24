@@ -73,7 +73,7 @@ const testMapCycleBigger = "class A extends Component {"+
 '}'
 
 // 
-var testJSXWindow = "class A extends Component {"+
+var testJSXWindow = "class A extends App {"+
   'static window = { miniappConfig:true };'+
   "render() {"+
     "return ("+

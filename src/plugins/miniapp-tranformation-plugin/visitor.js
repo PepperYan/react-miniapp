@@ -1,4 +1,4 @@
-const sharedState = require('./sharedState').sharedState;
+const sharedState = require('./sharedState');
 var t = require('@babel/types');
 const generate = require('@babel/generator').default
 const prettifyXml = require('./utils').prettifyXml
@@ -16,6 +16,8 @@ const componentLiftMethods = {
   properties: 1
 }
 
+const Pages = [];
+
 module.exports = {
   ClassDeclaration: {
     enter(path) {
@@ -28,6 +30,28 @@ module.exports = {
     exit(path) {
       //把该节点从path中移除?
       path.remove()
+    }
+  },
+  MemberExpression(path){
+    const code = generate(path.node).code
+    if (code === 'this.state') {
+      path.node.property.name = 'data'
+    }
+  },
+  ClassProperty(path) {
+    const propName = path.node.key.name
+    if(/window/.test(propName) && path.node.static){
+      let config = {}
+      path.node.value.properties.forEach(prop => {
+        config[prop.key.name] = prop.value.value
+      })
+      if (sharedState.output.type === 'App') {
+        config = {
+          window: config,
+          pages: Pages
+        }
+      }
+      sharedState.output.json = config
     }
   },
   ImportDeclaration(path){

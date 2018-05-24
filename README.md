@@ -10,7 +10,7 @@
     - [x] block支持
   - [x] 模板提取
   - [x] js methods 支持
-  - [ ] 页面json配置支持
+  - [x] 页面json配置支持
 - [ ] App
 - [ ] 组件化
    - [x] tag属性的支持

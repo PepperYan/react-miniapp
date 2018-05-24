@@ -17,7 +17,7 @@ describe('transformjs 代码转换',function() {
 
   it("JSX 事件", function() {
     const result = transform(testJSXEvent)
-    console.log(result);
+    // console.log(result);
   })
 
   it('JSX props',function() {

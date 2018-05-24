@@ -42,9 +42,9 @@ function recursivelyAssembleMapTag(callExpressionNode, rootConfig){
     console.log(`react-miniapp暂不支持除了map以外的渲染函数`);
   }
   const varibleName = rootConfig? rootConfig.rootVarName : callExpressionNode.callee.object.name;
-  const item = rootConfig? rootConfig.root1stParamName 
-                : callExpressionNode.arguments[0].params[0].name;
-  const index = callExpressionNode.arguments[0].params[1]? 
+  const item = rootConfig? rootConfig.root1stParamName  // wx-for-item= ? (default item)
+                : callExpressionNode.arguments[0].params[0].name; 
+  const index = callExpressionNode.arguments[0].params[1]? // wx-for-index= ? (default index)
                   callExpressionNode.arguments[0].params[1] : 'index';
   const indexName = rootConfig ? rootConfig.rootIndex : index;
   const jsxElement = assembleMapTag(

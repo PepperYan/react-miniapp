@@ -9,7 +9,7 @@ module.exports = {
     var options = {
       babelrc: false,
       sourceType: 'module',
-      plugins: ['jsx', 'objectRestSpread', 'classProperties'],
+      plugins: ['jsx', 'objectRestSpread', 'classProperties','classPrivateProperties'],
     }
   
     return babylon.parse(code, options);

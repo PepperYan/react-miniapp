@@ -32,11 +32,11 @@ describe('transformjs 代码转换',function() {
 
   it('JSX map嵌套', function(){
     const result = transform(Codes.testMapCycle);
-    // console.log(result);
+    console.log(result);
   })
 
   it('JSX 多层map嵌套', function(){
-    const result = transform(Codes.testMapCycleBigger);
-    console.log(result);
+    // const result = transform(Codes.testMapCycleBigger);
+    // console.log(result);
   })
 });

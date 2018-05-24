@@ -37,19 +37,20 @@ function assembleMapTag(tagName,fo, forItem, forIndex, nextNode){
  *            => argment<CallExpression || JSXElement>
  * @param {*} callExpressionNode 
  */
-function recursivelyAssembleMapTag(callExpressionNode){
+function recursivelyAssembleMapTag(callExpressionNode, rootConfig){
   if(callExpressionNode.callee.property.name !== 'map'){
     console.log(`react-miniapp暂不支持除了map以外的渲染函数`);
   }
-  const varibleName = callExpressionNode.callee.object.name;
-  const item = callExpressionNode.arguments[0].params[0].name;
-  const index = callExpressionNode.arguments[0].params[1];
-  const indexName = index ? index.name : null;
-
+  const varibleName = rootConfig? rootConfig.rootVarName : callExpressionNode.callee.object.name;
+  const item = rootConfig? rootConfig.root1stParamName 
+                : callExpressionNode.arguments[0].params[0].name;
+  const index = callExpressionNode.arguments[0].params[1]? 
+                  callExpressionNode.arguments[0].params[1] : 'index';
+  const indexName = rootConfig ? rootConfig.rootIndex : index;
   const jsxElement = assembleMapTag(
     'block',
     varibleName, 
-    callExpressionNode.arguments[0].params[0].name,
+    item,
     indexName,
     callExpressionNode.arguments[0].body.body[0].argument
   );
@@ -58,8 +59,18 @@ function recursivelyAssembleMapTag(callExpressionNode){
 }
 
 class MapVisitor{
-  constructor(){
-
+  /**
+   * 
+   * @param {*} config 
+   * config结构: {
+   *    rootVarName,
+   *    root1stParamName,
+   *    isComponent,
+   * 
+   * }
+   */
+  constructor(config){
+    this.config = Object.assign({}, config);
   }
 
   visitor(){
@@ -68,6 +79,20 @@ class MapVisitor{
       CallExpression(path){
         self.object = generate(path.node.callee.object).code;
       },
+      MemberExpression(path){
+        if(!self.entrance){
+          //第一次进入, 取得 第一个迭代的变量
+          if(!self.config.isComponent){ //Page
+            self.config.rootVarName = path.node.object.property.name;
+            self.config.root1stParamName = path.parent.arguments[0].params[0].name;
+            self.config.rootIndex = path.parent.arguments[0].params[1]? 
+                              path.parent.arguments[0].params[1].name : 'index';
+          }else{  //Component
+
+          }
+          self.entrance = true;
+        }
+      },
       ReturnStatement:{
         exit(path){
           if(path.node){
@@ -75,7 +100,7 @@ class MapVisitor{
               if(path.node.argument.callee.property.name !== 'map'){
                 console.log(`react-miniapp暂不支持除了map以外的渲染函数`);
               } 
-              const result = recursivelyAssembleMapTag(path.node.argument);
+              const result = recursivelyAssembleMapTag(path.node.argument,self.config);
               path.node.argument = result;
             }
             // return <div/>
@@ -101,12 +126,12 @@ class MapVisitor{
         enter(path){
           // console.log(path.parent);
           const tag = path.parent.openingElement.name.name;
+
           // TODO 处理key
-  
           const jsx = t.jsxOpeningElement(t.jsxIdentifier(wxTags[tag]),[
             t.jSXAttribute(t.jSXIdentifier('wx:for'), t.stringLiteral(`{{${self.object}}}`)),
             t.jSXAttribute(t.jSXIdentifier('wx:for-item'), t.stringLiteral(`${self.item}`)),
-            t.jSXAttribute(t.jSXIdentifier('wx:for-index'), t.stringLiteral(`${self.index}`)),
+            t.jSXAttribute(t.jSXIdentifier('wx:for-index'), t.stringLiteral(`${self.index || 'index'}`)),
           ])
   
           path.parent.openingElement = jsx;
@@ -182,7 +207,7 @@ const common = {
       }
     }
     
-    if(t.isCallExpression(path.node.expression)){
+    if(t.isCallExpression(path.node.expression)){ // <div>{  }</div> {}就进入函数调用循环
       if(path.node.expression.callee.property.name === 'map'){
         const mapAST = parseCode(generate(path.node.expression).code)
         const instance = new MapVisitor()

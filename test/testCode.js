@@ -39,6 +39,39 @@ const testMap = "class A extends Component {"+
 '}'+
 '}'
 
+//测试纯JSX编译
+const testMapCycle = "class A extends Component {"+
+"constructor(props){ this.state = { users:[ [{id:1}, {id:2}], [{id:1}, {id:2}] ] } }"+
+"render() {"+
+  "return ("+
+  '<div className="app">'+
+        '{ this.state.users.map(function(us){'+
+            'return us.map(function(user){'+
+              'return <div>{user.id}</div>'+
+            '})'+
+          '})'+
+        '}'+
+      '</div>'+
+  ')'+
+'}'+
+'}'
+
+const testMapCycleBigger = "class A extends Component {"+
+"constructor(props){ this.state = { users:[[[]]] } }"+
+"render() {"+
+  "return ("+
+  '<div className="app">'+
+        '{ this.state.users.map(function(us){'+
+            'return us.map(function(user){'+
+              'return user.map(function(u){ return <div>{u.id}</div>})'+
+            '})'+
+          '})'+
+        '}'+
+      '</div>'+
+  ')'+
+'}'+
+'}'
+
 //
 var testJSX = "class A extends Component {"+
   "render() {"+
@@ -60,5 +93,7 @@ module.exports = {
   testJSX,
   testProps,
   testMap,
+  testMapCycle,
+  testMapCycleBigger,
   testJSXEvent
 }

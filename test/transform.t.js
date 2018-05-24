@@ -16,17 +16,27 @@ describe('transformjs 代码转换',function() {
   // })
 
   it("JSX 事件", function() {
-    const result = transform(testJSXEvent)
+    // const result = transform(testJSXEvent)
     // console.log(result);
   })
 
   it('JSX props',function() {
-    const result = transform(Codes.testProps)
+    // const result = transform(Codes.testProps)
     // console.log(result);
   })
 
   it('JSX map', function(){
-    const result = transform(Codes.testMap);
+    // const result = transform(Codes.testMap);
+    // console.log(result);
+  })
+
+  it('JSX map嵌套', function(){
+    const result = transform(Codes.testMapCycle);
+    // console.log(result);
+  })
+
+  it('JSX 多层map嵌套', function(){
+    const result = transform(Codes.testMapCycleBigger);
     console.log(result);
   })
 });

@@ -6,64 +6,126 @@ const WXML_EVENTS = require('./wx/events');
 const wxTags = require('./wx/tag');
 const parseCode = require('./utils').parseCode
 
-
 let cache = {};
 
-function getMapVisitor(){
-  return {
-    CallExpression(path){
-      cache.object = generate(path.node.callee.object).code;
-    },
-    ReturnStatement:{
-      exit(path){
-        if(path.node){
-          // console.log(path.node)
-          const result = generate(path.node.argument).code;
-          cache.return = result;
-        }
-      }
-    },
-    FunctionExpression(path) {
-      path.node.params.forEach((arg, index) => {
-          if (index === 0) cache.item = generate(arg).code
-          if (index === 1) cache.index = generate(arg).code
-      })
-    },
-    ArrowFunctionExpression(path) {
-      path.node.params.forEach((arg, index) => {
-          if (index === 0) that.item = generate(arg).code
-          if (index === 1) that.index = generate(arg).code
-      })
-    },
-    JSXOpeningElement:{
-      enter(path){
-        // console.log(path.parent);
-        const tag = path.parent.openingElement.name.name;
-        // TODO 处理key
+function assembleMapTag(tagName,fo, forItem, forIndex, nextNode){
+  const attrs = [
+    t.jSXAttribute(t.jSXIdentifier('wx:for'), t.stringLiteral(`{{${fo}}}`)),
+    t.jSXAttribute(t.jSXIdentifier('wx:for-item'), t.stringLiteral(`${forItem}`)),
+  ]
+  if(forIndex) 
+    attrs.push(t.jSXAttribute(t.jSXIdentifier('wx:for-index'), t.stringLiteral(`${forIndex}`)));
+  
+  const jsxOpening = t.jsxOpeningElement(t.jsxIdentifier(tagName), attrs);
+  const jsxClosing = t.jsxClosingElement(t.jsxIdentifier(tagName));
+  let children = null;
+  if(t.isCallExpression(nextNode)){ //
+    children = recursivelyAssembleMapTag(nextNode);
+  }else{  //JSX
+    children = nextNode;
+  }
+  
+  const jsxElement = t.jsxElement(jsxOpening, jsxClosing,[children]);
 
-        const jsx = t.jsxOpeningElement(t.jsxIdentifier(wxTags[tag]),[
-          t.jSXAttribute(t.jSXIdentifier('wx:for'), t.stringLiteral(`{{${cache.object}}}`)),
-          t.jSXAttribute(t.jSXIdentifier('wx:for-item'), t.stringLiteral(`{{${cache.item}}}`)),
-          t.jSXAttribute(t.jSXIdentifier('wx:for-index'), t.stringLiteral(`{{${cache.index}}}`)),
-        ])
+  return jsxElement;
+}
 
-        path.parent.openingElement = jsx;
+/**
+ * 递归遍历 callExpression
+ * 层级结构为 callExpression => arguments<FunctionExpression> 
+ *            => body<BlockStatement> => body[0]<ReturnStatement>
+ *            => argment<CallExpression || JSXElement>
+ * @param {*} callExpressionNode 
+ */
+function recursivelyAssembleMapTag(callExpressionNode){
+  if(callExpressionNode.callee.property.name !== 'map'){
+    console.log(`react-miniapp暂不支持除了map以外的渲染函数`);
+  }
+  const varibleName = callExpressionNode.callee.object.name;
+  const item = callExpressionNode.arguments[0].params[0].name;
+  const index = callExpressionNode.arguments[0].params[1];
+  const indexName = index ? index.name : null;
+
+  const jsxElement = assembleMapTag(
+    'block',
+    varibleName, 
+    callExpressionNode.arguments[0].params[0].name,
+    indexName,
+    callExpressionNode.arguments[0].body.body[0].argument
+  );
+
+  return jsxElement;
+}
+
+class MapVisitor{
+  constructor(){
+
+  }
+
+  visitor(){
+    const self = this;
+    return {
+      CallExpression(path){
+        self.object = generate(path.node.callee.object).code;
       },
-      exit(path){
-        common.convertJSXOpeningElement(path);
-      }
-    },
-    JSXExpressionContainer(path){
-      common.convertJSXExpressionContainer(path);
-    },
-    JSXClosingElement(path){
-      if (!path.node.selfClosing) {
-        path.node.name = t.identifier(wxTags[path.node.name.name]);
+      ReturnStatement:{
+        exit(path){
+          if(path.node){
+            if(t.isReturnStatement(path.node) && t.isCallExpression(path.node.argument)){ // return list.map()
+              if(path.node.argument.callee.property.name !== 'map'){
+                console.log(`react-miniapp暂不支持除了map以外的渲染函数`);
+              } 
+              const result = recursivelyAssembleMapTag(path.node.argument);
+              path.node.argument = result;
+            }
+            // return <div/>
+            const result = generate(path.node.argument).code;
+            self.return = result;
+
+          }
+        }
+      },
+      FunctionExpression(path) {
+        path.node.params.forEach((arg, index) => {
+            if (index === 0) self.item = generate(arg).code
+            if (index === 1) self.index = generate(arg).code
+        })
+      },
+      ArrowFunctionExpression(path) {
+        path.node.params.forEach((arg, index) => {
+            if (index === 0) self.item = generate(arg).code
+            if (index === 1) self.index = generate(arg).code
+        })
+      },
+      JSXOpeningElement:{
+        enter(path){
+          // console.log(path.parent);
+          const tag = path.parent.openingElement.name.name;
+          // TODO 处理key
+  
+          const jsx = t.jsxOpeningElement(t.jsxIdentifier(wxTags[tag]),[
+            t.jSXAttribute(t.jSXIdentifier('wx:for'), t.stringLiteral(`{{${self.object}}}`)),
+            t.jSXAttribute(t.jSXIdentifier('wx:for-item'), t.stringLiteral(`${self.item}`)),
+            t.jSXAttribute(t.jSXIdentifier('wx:for-index'), t.stringLiteral(`${self.index}`)),
+          ])
+  
+          path.parent.openingElement = jsx;
+        },
+        exit(path){
+          common.convertJSXOpeningElement(path);
+        }
+      },
+      JSXExpressionContainer(path){
+        common.convertJSXExpressionContainer(path);
+      },
+      JSXClosingElement(path){
+        if (!path.node.selfClosing) {
+          path.node.name = t.identifier(wxTags[path.node.name.name]);
+        }
       }
     }
   }
 }
-
 
 const common = {
   convertJSXOpeningElement: function(path){
@@ -104,11 +166,11 @@ const common = {
     if(t.isJSXAttribute(path.parent)) { //<img src={this.props.imgSrc}>
       const varibleName = generate(path.node.expression).code;
       path.replaceWith(t.stringLiteral(`{{${varibleName}}}`));
-      return
     }
+
     if(
       t.isMemberExpression(path.node.expression)|| //{this.props.children}
-      // t.isIdentifier(path.node.expression)||  //{}
+      t.isIdentifier(path.node.expression)||  //{}
       t.isBinaryExpression(path.node.expression)  //{1+2}
     ){
       const code = generate(path.node.expression).code
@@ -118,14 +180,14 @@ const common = {
       }else{
         path.node.expression = t.identifier(`{${code}}`);
       }
-      return
     }
-    if(t.isJSXExpressionContainer(path.node)){
+    
+    if(t.isCallExpression(path.node.expression)){
       if(path.node.expression.callee.property.name === 'map'){
         const mapAST = parseCode(generate(path.node.expression).code)
-        traverse(mapAST, getMapVisitor.call(this));
-        path.replaceWith(t.identifier(cache.return));
-        cache = {}
+        const instance = new MapVisitor()
+        traverse(mapAST, Object.assign({},instance.visitor.call(instance)));
+        path.replaceWith(t.identifier(instance.return));
       }else{
         path.remove();
       }
@@ -137,4 +199,4 @@ const common = {
 
 
 
-module.exports = Object.assign({},common,{getMapVisitor});
+module.exports = Object.assign({},common);

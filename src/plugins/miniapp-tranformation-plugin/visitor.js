@@ -32,7 +32,6 @@ module.exports = {
   },
   ImportDeclaration(path){
     const source = path.node.source.value
-    console.log(source);
   },
   ClassMethod: {
     enter(path) {

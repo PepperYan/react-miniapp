@@ -1,10 +1,17 @@
 var t = require('@babel/types');
 const wxTags = require('./wx/tag')
 const common = require('./common');
+const generate = require('@babel/generator').default;
 
 module.exports = {
   JSXExpressionContainer(path) {
     common.convertJSXExpressionContainer(path);
+  },
+  MemberExpression(path){
+    const code = generate(path.node).code
+    if (code === 'this.state') {
+      path.node.property.name = 'data'
+    }
   },
   JSXOpeningElement: {
     enter(path) {

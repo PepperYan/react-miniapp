@@ -7,12 +7,6 @@ module.exports = {
   JSXExpressionContainer(path) {
     common.convertJSXExpressionContainer(path);
   },
-  MemberExpression(path){
-    const code = generate(path.node).code
-    if (code === 'this.state') {
-      path.node.property.name = 'data'
-    }
-  },
   JSXOpeningElement: {
     enter(path) {
       common.convertJSXOpeningElement(path);

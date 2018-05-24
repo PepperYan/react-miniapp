@@ -1,4 +1,4 @@
-const sharedState = require('./sharedState');
+const sharedState = require('./sharedState').sharedState;
 var t = require('@babel/types');
 const generate = require('@babel/generator').default
 const prettifyXml = require('./utils').prettifyXml
@@ -32,6 +32,13 @@ module.exports = {
   },
   ImportDeclaration(path){
     const source = path.node.source.value
+    if (/wechat/.test(source)) {
+      path.remove()
+    } else if (/pages/.test(source)) {
+      const pagePath = source.replace('./', '')
+      Pages.push(pagePath)
+      path.remove()
+    }
   },
   ClassMethod: {
     enter(path) {

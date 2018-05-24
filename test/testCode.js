@@ -72,6 +72,17 @@ const testMapCycleBigger = "class A extends Component {"+
 '}'+
 '}'
 
+// 
+var testJSXWindow = "class A extends Component {"+
+  'static window = { miniappConfig:true };'+
+  "render() {"+
+    "return ("+
+      '<div className="app">'+
+      '</div>'+
+    ')'+
+  '}'+
+'}'
+
 //
 var testJSX = "class A extends Component {"+
   "render() {"+
@@ -95,5 +106,6 @@ module.exports = {
   testMap,
   testMapCycle,
   testMapCycleBigger,
+  testJSXWindow,
   testJSXEvent
 }

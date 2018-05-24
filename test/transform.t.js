@@ -17,7 +17,7 @@ describe('transformjs 代码转换',function() {
 
   it("JSX 事件", function() {
     const result = transform(testJSXEvent)
-    // console.log(result);
+    console.log(result);
   })
 
   it('JSX props',function() {
@@ -32,11 +32,16 @@ describe('transformjs 代码转换',function() {
 
   it('JSX map嵌套', function(){
     const result = transform(Codes.testMapCycle);
-    console.log(result);
+    // console.log(result);
   })
 
   it('JSX 多层map嵌套', function(){
-    // const result = transform(Codes.testMapCycleBigger);
+    const result = transform(Codes.testMapCycleBigger);
     // console.log(result);
-  })
+  });
+
+  it('测试静态属性', function(){
+    const result = transform(Codes.testJSXWindow);
+    console.log(result);
+  });
 });

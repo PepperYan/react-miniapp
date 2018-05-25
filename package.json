@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "mocha": "^5.1.1",
+    "nodemon": "^1.17.5",
     "power-assert": "^1.5.0"
   }
 }

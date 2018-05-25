@@ -19,7 +19,7 @@ class SharedState {
       wxml:'',
       wxss:'',
       js:'',
-      json:'',
+      json:{},
       type:''//App||page||component
     }
     this.isTemplate = false

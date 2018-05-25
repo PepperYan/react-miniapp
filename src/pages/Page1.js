@@ -1,4 +1,4 @@
-import Page from './wechat'
+import Page from '../wechat'
 
 class P extends Page {
   onClick(){console.log('test click')}

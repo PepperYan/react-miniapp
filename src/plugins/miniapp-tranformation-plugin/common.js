@@ -8,20 +8,20 @@ const parseCode = require('./utils').parseCode
 
 let cache = {};
 
-function assembleMapTag(tagName,fo, forItem, forIndex, nextNode){
+function assembleMapTag(tagName,fo, forItem, forIndex, nextNode) {
   const attrs = [
     t.jSXAttribute(t.jSXIdentifier('wx:for'), t.stringLiteral(`{{${fo}}}`)),
     t.jSXAttribute(t.jSXIdentifier('wx:for-item'), t.stringLiteral(`${forItem}`)),
   ]
-  if(forIndex) 
+  if (forIndex) 
     attrs.push(t.jSXAttribute(t.jSXIdentifier('wx:for-index'), t.stringLiteral(`${forIndex}`)));
   
   const jsxOpening = t.jsxOpeningElement(t.jsxIdentifier(tagName), attrs);
   const jsxClosing = t.jsxClosingElement(t.jsxIdentifier(tagName));
   let children = null;
-  if(t.isCallExpression(nextNode)){ //
+  if (t.isCallExpression(nextNode)) { //
     children = recursivelyAssembleMapTag(nextNode);
-  }else{  //JSX
+  } else {  //JSX
     children = nextNode;
   }
   
@@ -37,8 +37,8 @@ function assembleMapTag(tagName,fo, forItem, forIndex, nextNode){
  *            => argment<CallExpression || JSXElement>
  * @param {*} callExpressionNode 
  */
-function recursivelyAssembleMapTag(callExpressionNode, rootConfig){
-  if(callExpressionNode.callee.property.name !== 'map'){
+function recursivelyAssembleMapTag(callExpressionNode, rootConfig) {
+  if (callExpressionNode.callee.property.name !== 'map') {
     console.log(`react-miniapp暂不支持除了map以外的渲染函数`);
   }
   const varibleName = rootConfig? rootConfig.rootVarName : callExpressionNode.callee.object.name;
@@ -58,7 +58,7 @@ function recursivelyAssembleMapTag(callExpressionNode, rootConfig){
   return jsxElement;
 }
 
-class MapVisitor{
+class MapVisitor {
   /**
    * 
    * @param {*} config 
@@ -69,35 +69,35 @@ class MapVisitor{
    * 
    * }
    */
-  constructor(config){
+  constructor(config) {
     this.config = Object.assign({}, config);
   }
 
-  visitor(){
+  visitor() {
     const self = this;
     return {
       CallExpression(path){
         self.object = generate(path.node.callee.object).code;
       },
-      MemberExpression(path){
-        if(!self.entrance){
+      MemberExpression(path) {
+        if (!self.entrance) {
           //第一次进入, 取得 第一个迭代的变量
-          if(!self.config.isComponent){ //Page
+          if (!self.config.isComponent) { //Page
             self.config.rootVarName = path.node.object.property.name;
             self.config.root1stParamName = path.parent.arguments[0].params[0].name;
             self.config.rootIndex = path.parent.arguments[0].params[1]? 
                               path.parent.arguments[0].params[1].name : 'index';
-          }else{  //Component
+          } else {  //Component
 
           }
           self.entrance = true;
         }
       },
-      ReturnStatement:{
-        exit(path){
-          if(path.node){
-            if(t.isReturnStatement(path.node) && t.isCallExpression(path.node.argument)){ // return list.map()
-              if(path.node.argument.callee.property.name !== 'map'){
+      ReturnStatement: {
+        exit(path) {
+          if (path.node) {
+            if (t.isReturnStatement(path.node) && t.isCallExpression(path.node.argument)) { // return list.map()
+              if (path.node.argument.callee.property.name !== 'map') {
                 console.log(`react-miniapp暂不支持除了map以外的渲染函数`);
               } 
               const result = recursivelyAssembleMapTag(path.node.argument,self.config);
@@ -122,8 +122,8 @@ class MapVisitor{
             if (index === 1) self.index = generate(arg).code
         })
       },
-      JSXOpeningElement:{
-        enter(path){
+      JSXOpeningElement: {
+        enter(path) {
           // console.log(path.parent);
           const tag = path.parent.openingElement.name.name;
 
@@ -136,14 +136,14 @@ class MapVisitor{
   
           path.parent.openingElement = jsx;
         },
-        exit(path){
+        exit(path) {
           common.convertJSXOpeningElement(path);
         }
       },
-      JSXExpressionContainer(path){
+      JSXExpressionContainer(path) {
         common.convertJSXExpressionContainer(path);
       },
-      JSXClosingElement(path){
+      JSXClosingElement(path) {
         if (!path.node.selfClosing) {
           path.node.name = t.identifier(wxTags[path.node.name.name]);
         }
@@ -153,16 +153,16 @@ class MapVisitor{
 }
 
 const common = {
-  convertJSXOpeningElement: function(path){
+  convertJSXOpeningElement: function(path) {
     path.node.name = t.identifier(wxTags[path.node.name.name]);
     path.node.attributes.forEach((attr, index) => {
       const originName = attr.name.name;
       const attrName = attr.name.name.toLowerCase();
-      if(attrName === 'classname'){ // 转换className到class
+      if (attrName === 'classname') { // 转换className到class
         path.node.attributes[index] = t.jsxAttribute(t.jsxIdentifier('class'), t.stringLiteral('app'));
         return;
       }
-      if(WXML_EVENTS[attrName]){ // 事件转换
+      if (WXML_EVENTS[attrName]) { // 事件转换
         //映射事件
         attr.name = t.identifier(WXML_EVENTS[attrName]);
         const funName = generate(attr.value.expression.property).code;
@@ -175,7 +175,7 @@ const common = {
         attr.value = t.stringLiteral(funName);
         return;
       }
-      if(attrName === 'style'){ // 样式转换
+      if (attrName === 'style') { // 样式转换
         let tempAttrs = ''
         attr.value.expression.properties.forEach(style => {
           const key = generate(style.key).code;``
@@ -188,40 +188,36 @@ const common = {
     });
   },
   convertJSXExpressionContainer(path) {
-    if(t.isJSXAttribute(path.parent)) { //<img src={this.props.imgSrc}>
+    if (t.isJSXAttribute(path.parent)) { //<img src={this.props.imgSrc}>
       const varibleName = generate(path.node.expression).code;
       path.replaceWith(t.stringLiteral(`{{${varibleName}}}`));
     }
 
-    if(
+    if (
       t.isMemberExpression(path.node.expression)|| //{this.props.children}
       t.isIdentifier(path.node.expression)||  //{}
       t.isBinaryExpression(path.node.expression)  //{1+2}
     ){
       const code = generate(path.node.expression).code
-      if(code === 'this.props.children'){
+      if (code === 'this.props.children') {
         const openningTag = t.jsxOpeningElement(t.jsxIdentifier('slot'), [], true);
         path.replaceWith(openningTag);
-      }else{
+      } else {
         path.node.expression = t.identifier(`{${code}}`);
       }
     }
     
-    if(t.isCallExpression(path.node.expression)){ // <div>{  }</div> {}就进入函数调用循环
-      if(path.node.expression.callee.property.name === 'map'){
+    if (t.isCallExpression(path.node.expression)) { // <div>{  }</div> {}就进入函数调用循环
+      if (path.node.expression.callee.property.name === 'map') {
         const mapAST = parseCode(generate(path.node.expression).code)
         const instance = new MapVisitor()
         traverse(mapAST, Object.assign({},instance.visitor.call(instance)));
         path.replaceWith(t.identifier(instance.return));
-      }else{
+      } else {
         path.remove();
       }
     }
   },
-
 }
-
-
-
 
 module.exports = Object.assign({},common);

@@ -1,7 +1,7 @@
 
-class SharedState{
-  constructor(){
-    this.output={
+class SharedState {
+  constructor() {
+    this.output = {
       wxml:'',
       wxss:'',
       js:'',
@@ -11,11 +11,11 @@ class SharedState{
     this.isTemplate = false
     this.methods = [] //编译文件的类方法
     this.unRecognizeImportedModule = {} //存储非Component的依赖
-    this.importedComponent ={} //导入的组件
+    this.importedComponent = {} //导入的组件
   }
   
-  reset(){
-    this.output={
+  reset() {
+    this.output = {
       wxml:'',
       wxss:'',
       js:'',

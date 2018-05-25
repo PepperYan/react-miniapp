@@ -22,8 +22,8 @@ module.exports = {
   ClassDeclaration: {
     enter(path) {
       const superClz = path.node.superClass && path.node.superClass.name;
-      if(superClz){
-        if(superClz !== 'App' && superClz !== 'Page' && superClz !== 'Component') return;
+      if (superClz) {
+        if (superClz !== 'App' && superClz !== 'Page' && superClz !== 'Component') return;
         sharedState.output.type = superClz;
       }
     },
@@ -32,7 +32,7 @@ module.exports = {
       path.remove()
     }
   },
-  MemberExpression(path){
+  MemberExpression(path) {
     const code = generate(path.node).code
     if (code === 'this.state') {
       path.node.property.name = 'data'
@@ -40,7 +40,7 @@ module.exports = {
   },
   ClassProperty(path) {
     const propName = path.node.key.name
-    if(/window/.test(propName) && path.node.static){
+    if (/window/.test(propName) && path.node.static) {
       let config = {}
       path.node.value.properties.forEach(prop => {
         config[prop.key.name] = prop.value.value
@@ -54,7 +54,7 @@ module.exports = {
       sharedState.output.json = config
     }
   },
-  ImportDeclaration(path){
+  ImportDeclaration(path) {
     const source = path.node.source.value
     if (/wechat/.test(source)) {
       path.remove()

@@ -1,0 +1,3 @@
+<view class="app" bindtap="onClick" style="posistion:relative">
+  hello
+</view>

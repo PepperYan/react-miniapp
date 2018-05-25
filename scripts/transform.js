@@ -5,6 +5,16 @@ const transformPlugin = require('../packages/react-miniapp-tranformation-plugin'
 const sharedState = require('../packages/react-miniapp-tranformation-plugin/sharedState');
 const parseCode = require('../packages/react-miniapp-tranformation-plugin/utils').parseCode;
 
+const CodeWrapper = (type, code) => {
+  return `\nconst react_miniapp_obj = ${code}
+const onLoad = react_miniapp_obj.onLoad
+react_miniapp_obj.onLoad = function(args){
+  if(onLoad !== void 666)
+      onLoad.call(this,args)
+}
+${type}(react_miniapp_obj)`
+}
+
 function transform(code) {
   let output = {
     wxml:'',
@@ -21,6 +31,16 @@ function transform(code) {
   const obj = t.objectExpression(sharedState.methods);
   output.js = generate(obj).code;
   sharedState.reset();
+
+  switch(output.type){
+    case 'App':
+      output.js = CodeWrapper('App', output.js);
+      break;
+    default: //Page
+      output.js = CodeWrapper('Page', output.js);
+      break;
+  }
+
   return output;
 }
 

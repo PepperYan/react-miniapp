@@ -1,6 +1,5 @@
 var assert = require('assert');
-var transform = require('../src/transform').transform
-var parseCode = require('../src/transform').parseCode
+var transform = require('../scripts/transform').transform
 const generate = require('@babel/generator').default
 var t = require('@babel/types')
 const Codes = require('./testCode');

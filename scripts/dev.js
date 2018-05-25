@@ -86,7 +86,7 @@ class Parser {
 
 async function build() {
   try {
-      const parser = new Parser('./src/Page1.js')
+      const parser = new Parser('./src/App.js')
       await parser.parse()
       // await parser.copyRes('./temple')
       // parser.watch('../src')

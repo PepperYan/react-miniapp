@@ -5,13 +5,13 @@
 
 - [x] 页面
   - [x] jsx模板转换
-    - [x] render函数对map函数嵌套支持
+    - [x] render函数对map函数多层嵌套支持
     - [x] tag支持
     - [x] block支持
   - [x] 模板提取
   - [x] js methods 支持
   - [x] 页面json配置支持
-- [ ] App
+- [x] App
 - [ ] 组件化
    - [x] tag属性的支持
    - [ ] component
@@ -22,7 +22,7 @@
    - [ ] 无状态组件
       - [ ] 通过外部引入无状态组件
       - [ ] 页面内组件引入无状态组件
-      - [ ] wxs支持
+      - [ ] wxss支持
       - [ ] 页面内箭头函数无状态组件
       - [ ] 无状态组件的属性设置问题
    - [ ] 组件间通信
@@ -31,8 +31,9 @@
    - [ ] redux-saga
    - [ ] redux-thunk
 - [ ] npm包支持
+- [ ] 標準化plugin
 - [ ] ui库 
-- [ ] 单元测试
+- [x] 单元测试
 - [ ] typing 支持
 - [ ] 工具 watch (增量编译)
 - [ ] CI/CD

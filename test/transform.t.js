@@ -32,7 +32,7 @@ describe('transformjs 代码转换',function() {
 
   it('JSX map嵌套', function(){
     const result = transform(Codes.testMapCycle);
-    // console.log(result);
+    console.log(result);
   })
 
   it('JSX 多层map嵌套', function(){
@@ -42,6 +42,6 @@ describe('transformjs 代码转换',function() {
 
   it('测试静态属性', function(){
     const result = transform(Codes.testJSXWindow);
-    console.log(result);
+    // console.log(result);
   });
 });

@@ -24,6 +24,7 @@
   "dependencies": {
     "@babel/core": "^7.0.0-beta.46",
     "@babel/generator": "^7.0.0-beta.46",
+    "@babel/parser": "^7.0.0-beta.48",
     "@babel/plugin-proposal-class-properties": "^7.0.0-beta.46",
     "@babel/plugin-transform-modules-commonjs": "^7.0.0-beta.46",
     "@babel/preset-env": "^7.0.0-beta.46",
@@ -37,6 +38,7 @@
     "rollup": "^0.59.3",
     "rollup-plugin-babel": "^4.0.0-beta.4",
     "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-postcss": "^1.6.1",
     "wt": "^1.2.0"
   },
   "devDependencies": {

@@ -1,5 +1,6 @@
 const traverse = require('@babel/traverse').default
 const generate = require('@babel/generator').default
+const babel = require('@babel/core')
 var t = require('@babel/types');
 const transformPlugin = require('../packages/react-miniapp-tranformation-plugin');
 const sharedState = require('../packages/react-miniapp-tranformation-plugin/sharedState');
@@ -23,7 +24,7 @@ function transform(code) {
     json:'',
     type:''//App||page||component
   }
-
+  
   const ast = parseCode(code);
   traverse(ast, transformPlugin);
   output = sharedState.output;

@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/PepperYan/react-miniapp.svg?branch=master)](https://travis-ci.org/PepperYan/react-miniapp)
 
-
+##支持列表
 - [x] 页面
   - [x] jsx模板转换
     - [x] render函数对map函数多层嵌套支持
@@ -22,7 +22,7 @@
    - [ ] 无状态组件
       - [ ] 通过外部引入无状态组件
       - [ ] 页面内组件引入无状态组件
-      - [ ] wxss支持
+      
       - [ ] 页面内箭头函数无状态组件
       - [ ] 无状态组件的属性设置问题
    - [ ] 组件间通信
@@ -31,6 +31,10 @@
    - [ ] redux-saga
    - [ ] redux-thunk
 - [ ] npm包支持
+- [ ] wxss支持
+  - [ ] css import
+  - [ ] css合并
+  - [ ] wxss输出
 - [ ] 標準化plugin
 - [ ] ui库 
 - [x] 单元测试

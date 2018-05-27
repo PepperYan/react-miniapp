@@ -7,27 +7,45 @@ const wt = require('wt');
 const fs = require('fs-extra');
 const miniappPlugin = require('../packages/react-miniapp-tranformation-plugin');
 const transform = require('./transform').transform;
+const postcss = require('rollup-plugin-postcss')
+
+const ignoreStyles = function(){
+  return  {
+    visitor:{
+      ImportDeclaration:{
+        enter(path,{ opts }){
+          const source = path.node.source.value
+          if(/.css/.test(source)){
+            path.remove();
+          }
+        }
+      }
+    }
+  }
+}
+
 
 class Parser {
   constructor(tPath){
     this.path = tPath;
-    this.outputOptions = {
+    this.inputOptions = {
       input: path.resolve(this.path),
       plugins: [
-          resolve(),
-          rBabel({
-              exclude: 'node_modules/**',
-              babelrc: false,
-              presets: ['@babel/preset-react'],
-              plugins: ['@babel/plugin-proposal-object-rest-spread', '@babel/plugin-proposal-class-properties']
-          })
+        resolve(),
+        rBabel({
+          exclude: ['node_modules/**'],
+          babelrc: false,
+          runtimeHelpers: true,
+          presets: ['@babel/preset-react'],
+          plugins: [ignoreStyles,'@babel/plugin-proposal-object-rest-spread', '@babel/plugin-proposal-class-properties']
+        }),
       ]
     }
     this.output = path.resolve('./build');
   }
 
   async parse(){
-    const bundle = await rollup.rollup(this.outputOptions);
+    const bundle = await rollup.rollup(this.inputOptions);
     const modules = bundle.modules.map(({ id, dependencies, originalCode, code }) => {
       if (/rollup/.test(id)) return //忽略 rollupPluginBabelHelpers
       return {
@@ -89,7 +107,7 @@ async function build() {
       const parser = new Parser('./src/App.js')
       await parser.parse()
       // await parser.copyRes('./temple')
-      // parser.watch('../src')
+      // parser.watch('./src')
   } catch (e) {
       console.log(chalk.redBright(e))
       console.log(e)

@@ -1,5 +1,6 @@
 const prettifyXml = require('prettify-xml');
-const babylon = require('babylon');
+const babylon = require('@babel/parser');
+const cssPlugin = require('babel-plugin-css-modules-transform').default
 
 module.exports = {
   prettifyXml(wxml) {
@@ -9,7 +10,7 @@ module.exports = {
     var options = {
       babelrc: false,
       sourceType: 'module',
-      plugins: ['jsx', 'objectRestSpread', 'classProperties','classPrivateProperties'],
+      plugins: ['jsx', 'objectRestSpread', 'classProperties','classPrivateProperties','decorators'],
     }
   
     return babylon.parse(code, options);

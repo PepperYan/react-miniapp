@@ -7,7 +7,7 @@ const wt = require('wt');
 const fs = require('fs-extra');
 const miniappPlugin = require('../packages/react-miniapp-tranformation-plugin');
 const transform = require('./transform').transform;
-const postcss = require('../packages/rollup-plugin-postcss/lib/rollup-plugin-postcss.cjs')
+const postcss = require('rollup-plugin-postcss-miniapp')
 
 const ignoreStyles = function(){
   return  {

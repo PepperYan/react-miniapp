@@ -214,7 +214,7 @@
   version "7.0.0-beta.48"
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.0.0-beta.48.tgz#f93895cbacee703c0ec98e5af3901c77edd9f1d7"
 
-"@babel/plugin-proposal-async-generator-functions@7.0.0-beta.49":
+"@babel/plugin-proposal-async-generator-functions@7.0.0-beta.49", "@babel/plugin-proposal-async-generator-functions@^7.0.0-beta.49":
   version "7.0.0-beta.49"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-async-generator-functions/-/plugin-proposal-async-generator-functions-7.0.0-beta.49.tgz#8761a5e2d8b5251e70df28f4d0aa64aa28a596b1"
   dependencies:
@@ -232,6 +232,13 @@
     "@babel/helper-plugin-utils" "7.0.0-beta.49"
     "@babel/helper-replace-supers" "7.0.0-beta.49"
     "@babel/plugin-syntax-class-properties" "7.0.0-beta.49"
+
+"@babel/plugin-proposal-decorators@^7.0.0-beta.49":
+  version "7.0.0-beta.49"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-decorators/-/plugin-proposal-decorators-7.0.0-beta.49.tgz#5760ab683174e60ad670dc9c5ef39f1d7d349c7b"
+  dependencies:
+    "@babel/helper-plugin-utils" "7.0.0-beta.49"
+    "@babel/plugin-syntax-decorators" "7.0.0-beta.49"
 
 "@babel/plugin-proposal-object-rest-spread@7.0.0-beta.49":
   version "7.0.0-beta.49"
@@ -264,6 +271,12 @@
 "@babel/plugin-syntax-class-properties@7.0.0-beta.49":
   version "7.0.0-beta.49"
   resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-class-properties/-/plugin-syntax-class-properties-7.0.0-beta.49.tgz#6a14fa47ceaa32b53e14e6648326e52dab306904"
+  dependencies:
+    "@babel/helper-plugin-utils" "7.0.0-beta.49"
+
+"@babel/plugin-syntax-decorators@7.0.0-beta.49":
+  version "7.0.0-beta.49"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-decorators/-/plugin-syntax-decorators-7.0.0-beta.49.tgz#1773e9089a4670868b2e9e2aa55045a13f8bd494"
   dependencies:
     "@babel/helper-plugin-utils" "7.0.0-beta.49"
 
@@ -745,10 +758,6 @@ autoprefixer@^6.3.1:
     num2fraction "^1.2.2"
     postcss "^5.2.16"
     postcss-value-parser "^3.2.3"
-
-babel-plugin-syntax-jsx@^6.18.0:
-  version "6.18.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-jsx/-/babel-plugin-syntax-jsx-6.18.0.tgz#0af32a9a6e13ca7a3fd5069e62d7b0f58d0d8946"
 
 balanced-match@^0.4.2:
   version "0.4.2"
@@ -3118,9 +3127,9 @@ rollup-plugin-node-resolve@^3.3.0:
     is-module "^1.0.0"
     resolve "^1.1.6"
 
-rollup-plugin-postcss@^1.6.1:
+rollup-plugin-postcss-miniapp@^1.6.1:
   version "1.6.1"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-postcss/-/rollup-plugin-postcss-1.6.1.tgz#8251104b9d9eedacbb56e87fb8fb9f226daaf716"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-postcss-miniapp/-/rollup-plugin-postcss-miniapp-1.6.1.tgz#34539189fd86e9fcae95ed531213b90b3028a772"
   dependencies:
     "@vue/component-compiler-utils" "^1.0.0"
     chalk "^2.0.0"

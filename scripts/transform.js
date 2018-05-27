@@ -16,6 +16,12 @@ react_miniapp_obj.onLoad = function(args){
 ${type}(react_miniapp_obj)`
 }
 
+function tPlugin(){
+  return {
+    visitor: transformPlugin
+  }
+}
+
 function transform(code) {
   let output = {
     wxml:'',
@@ -24,15 +30,20 @@ function transform(code) {
     json:'',
     type:''//App||page||component
   }
-  
-  const ast = parseCode(code);
-  traverse(ast, transformPlugin);
+  const result = babel.transform(code, {
+    babelrc: false,
+    // presets: [['@babel/preset-env', {module:false}]],
+    plugins: ['@babel/plugin-syntax-jsx', tPlugin, '@babel/plugin-proposal-object-rest-spread', '@babel/plugin-proposal-class-properties', '@babel/plugin-proposal-decorators']
+  })
+
+  // const ast = parseCode(code);
+  // traverse(ast, transformPlugin);
   output = sharedState.output;
 
   const obj = t.objectExpression(sharedState.methods);
   output.js = generate(obj).code;
   sharedState.reset();
-
+  
   switch(output.type){
     case 'App':
       output.js = CodeWrapper('App', output.js);

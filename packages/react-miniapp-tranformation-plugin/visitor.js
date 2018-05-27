@@ -62,6 +62,8 @@ module.exports = {
       const pagePath = source.replace('./', '')
       Pages.push(pagePath)
       path.remove()
+    } else if(/.css/.test(source)){
+      path.remove();
     }
   },
   ClassMethod: {
@@ -74,7 +76,9 @@ module.exports = {
         t.identifier(methodName),
         t.functionExpression(null, path.node.params, path.node.body, path.node.generator,path.node.async)
       )
+
       //component?
+      console.log(sharedState.methods)
       sharedState.methods.push(fn);
     },
     exit(path) {

@@ -1,6 +1,5 @@
 const prettifyXml = require('prettify-xml');
 const babylon = require('@babel/parser');
-const cssPlugin = require('babel-plugin-css-modules-transform').default
 
 module.exports = {
   prettifyXml(wxml) {

@@ -33,7 +33,7 @@ function transform(code) {
   const result = babel.transform(code, {
     babelrc: false,
     // presets: [['@babel/preset-env', {module:false}]],
-    plugins: ['@babel/plugin-syntax-jsx', tPlugin, '@babel/plugin-proposal-object-rest-spread', '@babel/plugin-proposal-class-properties', '@babel/plugin-proposal-decorators']
+    plugins: ['@babel/plugin-syntax-jsx', tPlugin, '@babel/plugin-proposal-object-rest-spread', '@babel/plugin-proposal-class-properties', ['@babel/plugin-proposal-decorators',{"legacy": true}]]
   })
 
   // const ast = parseCode(code);

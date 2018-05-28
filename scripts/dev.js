@@ -7,7 +7,6 @@ const wt = require('wt');
 const fs = require('fs-extra');
 const miniappPlugin = require('../packages/react-miniapp-tranformation-plugin');
 const transform = require('./transform').transform;
-const postcss = require('rollup-plugin-postcss-miniapp')
 
 const ignoreStyles = function(){
   return  {
@@ -32,8 +31,6 @@ class Parser {
       input: path.resolve(this.path),
       plugins: [
         resolve(),
-        postcss({
-        }),
         rBabel({
           exclude: ['node_modules/**'],
           babelrc: false,

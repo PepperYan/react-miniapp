@@ -5,7 +5,8 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha",
-    "dev": "node scripts/dev.js"
+    "dev": "node scripts/dev.js",
+    "link": "link-local-packages packages\rollup-plugin-postcss-miniapp"
   },
   "repository": {
     "type": "git",
@@ -37,6 +38,7 @@
     "@babel/types": "^7.0.0-beta.46",
     "chalk": "^2.4.1",
     "fs-extra": "^6.0.1",
+    "link-local-packages": "^1.1.1",
     "prettify-xml": "^1.2.0",
     "rollup": "^0.59.3",
     "rollup-plugin-babel": "^4.0.0-beta.4",

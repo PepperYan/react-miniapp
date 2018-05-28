@@ -63,6 +63,7 @@ module.exports = {
       Pages.push(pagePath)
       path.remove()
     } else if(/.css/.test(source)){
+      // console.log(path);
       path.remove();
     }
   },

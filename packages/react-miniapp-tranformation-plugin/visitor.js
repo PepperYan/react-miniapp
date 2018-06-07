@@ -1,7 +1,8 @@
 const sharedState = require('./sharedState');
 var t = require('@babel/types');
-const generate = require('@babel/generator').default
-const prettifyXml = require('./utils').prettifyXml
+const generate = require('@babel/generator').default;
+const prettifyXml = require('./utils').prettifyXml;
+const fs = require('fs-extra');
 
 const componentLiftMethods = {
   created: 1,
@@ -17,6 +18,10 @@ const componentLiftMethods = {
 }
 
 const Pages = [];
+
+function loadCSSFromFile(){
+
+}
 
 module.exports = {
   ClassDeclaration: {
@@ -72,6 +77,8 @@ module.exports = {
       }
     } else if (/.css/.test(source)) {
       // console.log(path);
+      console.log(source)
+      loadCSSFromFile();
       path.remove();
     }
   },
@@ -87,7 +94,6 @@ module.exports = {
       )
 
       //component?
-      console.log(sharedState.methods)
       sharedState.methods.push(fn);
     },
     exit(path) {

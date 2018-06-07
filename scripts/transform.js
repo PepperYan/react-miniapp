@@ -26,7 +26,6 @@ function transform(code) {
   }
   const result = babel.transform(code, {
     babelrc: false,
-    // presets: [['@babel/preset-env', {module:false}]],
     plugins: [
       '@babel/plugin-syntax-jsx', 
       transformPlugin, 
@@ -35,13 +34,9 @@ function transform(code) {
     ]
   })
 
-  // const ast = parseCode(code);
-  // const r = transformPlugin();
-  // traverse(ast, transformPlugin);
   output = sharedState.output;
   const obj = t.objectExpression(sharedState.methods);
   output.js = generate(obj).code;
-  console.log(sharedState.output)
   sharedState.reset();
 
 

@@ -36,7 +36,7 @@ class Parser {
           babelrc: false,
           runtimeHelpers: true,
           presets: ['@babel/preset-react'],
-          plugins: [ignoreStyles,'@babel/plugin-proposal-object-rest-spread', '@babel/plugin-proposal-class-properties']
+          plugins: ['@babel/plugin-proposal-object-rest-spread', '@babel/plugin-proposal-class-properties', ignoreStyles]
         }),
       ]
     }
@@ -103,7 +103,7 @@ class Parser {
 
 async function build() {
   try {
-      const parser = new Parser('./src/App.js')
+      const parser = new Parser('./src/app.js')
       await parser.parse()
       // await parser.copyRes('./temple')
       // parser.watch('./src')

@@ -20,7 +20,7 @@ const Pages = [];
 
 module.exports = {
   ClassDeclaration: {
-    enter(path) {
+    enter(path) {      
       const superClz = path.node.superClass && path.node.superClass.name;
       if (superClz) {
         if (superClz !== 'App' && superClz !== 'Page' && superClz !== 'Component') return;
@@ -32,7 +32,7 @@ module.exports = {
       path.remove()
     }
   },
-  MemberExpression(path) {
+  MemberExpression(path) {    
     const code = generate(path.node).code
     if (code === 'this.state') {
       path.node.property.name = 'data'
@@ -52,9 +52,11 @@ module.exports = {
         }
       }
       sharedState.output.json = config
+    }else if(/props/.test){
+      methods.push(t.objectProperty(t.identifier('properties'),path.node.value));
     }
   },
-  ImportDeclaration(path) {
+  ImportDeclaration(path) {    
     const source = path.node.source.value
     if (/wechat/.test(source)) {
       path.remove()
@@ -62,7 +64,13 @@ module.exports = {
       const pagePath = source.replace('./', '')
       Pages.push(pagePath)
       path.remove()
-    } else if(/.css/.test(source)){
+    } else if (/components/.test(source)) {
+      const { specifiers } = path.node
+      for(let sp of specifiers){
+        const componentName = sp.local.name;
+        sharedState.importedComponent[componentName] = source;
+      }
+    } else if (/.css/.test(source)) {
       // console.log(path);
       path.remove();
     }

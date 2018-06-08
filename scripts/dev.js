@@ -8,6 +8,8 @@ const fs = require('fs-extra');
 const miniappPlugin = require('../packages/react-miniapp-tranformation-plugin');
 const transform = require('./transform').transform;
 
+const entryFolder = path.resolve(__dirname,'../src')
+
 const ignoreStyles = function(){
   return  {
     visitor:{
@@ -56,6 +58,8 @@ class Parser {
           })
       }
     });
+    
+
     const p = modules.map(m => {
       if (m) {
           return this.codegen.call(this, m.id, m.dependencies, m.code, m.babeled)
@@ -63,6 +67,11 @@ class Parser {
     })
 
     await Promise.all(p)
+
+    const filePath = path.resolve(entryFolder, 'project.config.json')
+    if(fs.existsSync(filePath)){
+      fs.copyFile(filePath, this.output + '/project.config.json',() => {})
+    }
   }
 
   async codegen(id, dependencies, code, babeled) {

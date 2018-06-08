@@ -34,9 +34,10 @@
   - [ ] css import
   - [ ] css合并
   - [ ] wxss输出
-- [ ] 標準化plugin
+- [x] 標準化plugin 2018.6.8
 - [ ] ui库 
 - [x] 单元测试
+- [x] 项目配置
 - [ ] typing 支持
 - [ ] 工具 watch (增量编译)
 - [ ] CI/CD

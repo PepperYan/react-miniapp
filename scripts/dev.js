@@ -10,6 +10,10 @@ const transform = require('./transform').transform;
 
 const entryFolder = path.resolve(__dirname,'../src')
 
+const projectPath = process.cwd();
+const sourceDirPath = path.join(projectPath, 'src');
+const outputDirPath = path.join(projectPath, 'dist');
+
 const ignoreStyles = function(){
   return  {
     visitor:{
@@ -68,14 +72,15 @@ class Parser {
 
     await Promise.all(p)
 
-    const filePath = path.resolve(entryFolder, 'project.config.json')
+    const filePath = path.resolve(sourceDirPath, 'project.config.json')
     if(fs.existsSync(filePath)){
       fs.copyFile(filePath, this.output + '/project.config.json',() => {})
     }
   }
 
   async codegen(id, dependencies, code, babeled) {
-    let srcPath = id.replace(path.resolve(__dirname,'../src'), '');
+    let sourcePath = id;
+    let srcPath = id.replace(sourceDirPath, '');
     if (/node_modules/.test(srcPath)) {
       srcPath = srcPath.replace(path.resolve('node_modules'), '')
       srcPath = `nodeModules${srcPath}`
@@ -83,7 +88,7 @@ class Parser {
     const destPath = path.join(this.output, srcPath)
     if (/wechat.js/.test(destPath)) return
     await fs.ensureFile(path.resolve(destPath));
-    const output = transform(code, id, destPath, dependencies)
+    const output = transform(code, sourcePath, destPath, dependencies)
     const srcBasePath = id.replace('.js', '')
     const basePath = destPath.replace('.js', '')
     if (/Page|App|Component/.test(output.type)) {

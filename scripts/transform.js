@@ -16,7 +16,7 @@ react_miniapp_obj.onLoad = function(args){
 ${type}(react_miniapp_obj)`
 }
 
-function transform(code) {
+function transform(code, sourcePath) {
   let output = {
     wxml:'',
     wxss:'',
@@ -24,6 +24,7 @@ function transform(code) {
     json:'',
     type:''//App||page||component
   }
+  sharedState.sourcePath = sourcePath;
   const result = babel.transform(code, {
     babelrc: false,
     plugins: [

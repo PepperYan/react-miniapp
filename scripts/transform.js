@@ -34,7 +34,7 @@ function transform(code, sourcePath) {
       ['@babel/plugin-proposal-decorators',{"legacy": true}] 
     ]
   })
-
+  // tranform后, 结果都会写入sharedState.output
   output = sharedState.output;
   const obj = t.objectExpression(sharedState.methods);
   output.js = generate(obj).code;

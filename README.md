@@ -2,6 +2,19 @@
 
 [![Build Status](https://travis-ci.org/PepperYan/react-miniapp.svg?branch=master)](https://travis-ci.org/PepperYan/react-miniapp)
 
+## 快速开始
+1. 安装依赖
+```
+cd react-miniapp
+yarn
+```
+2. 打开微信开发者工具, 选择小程序, 导入build文件夹
+3. 开发React(还在demo阶段,现在会直接编译src目录)
+4. 打包代码
+```
+npm run dev
+```
+
 ##支持列表
 - [x] 页面
   - [x] jsx模板转换

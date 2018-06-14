@@ -30,10 +30,10 @@
    - [ ] redux-saga
    - [ ] redux-thunk
 - [ ] npm包支持
-- [ ] wxss支持
-  - [ ] css import
-  - [ ] css合并
-  - [ ] wxss输出
+- [x] wxss支持
+  - [x] css import
+  - [x] css合并
+  - [x] wxss输出
 - [x] 標準化plugin 2018.6.8
 - [ ] ui库 
 - [x] 单元测试

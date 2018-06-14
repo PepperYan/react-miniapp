@@ -83,6 +83,7 @@ class MapVisitor {
         if (!self.entrance) {
           //第一次进入, 取得 第一个迭代的变量
           if (!self.config.isComponent) { //Page
+            if(t.isIdentifier(path.node.object)) return;
             self.config.rootVarName = path.node.object.property.name;
             self.config.root1stParamName = path.parent.arguments[0].params[0].name;
             self.config.rootIndex = path.parent.arguments[0].params[1]? 

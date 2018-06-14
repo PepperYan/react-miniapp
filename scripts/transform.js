@@ -40,7 +40,6 @@ function transform(code, sourcePath) {
   output.js = generate(obj).code;
   sharedState.reset();
 
-
   switch(output.type){
     case 'App':
       output.js = CodeWrapper('App', output.js);

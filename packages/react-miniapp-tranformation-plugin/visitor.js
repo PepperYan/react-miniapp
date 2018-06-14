@@ -2,6 +2,7 @@ const sharedState = require('./sharedState');
 var t = require('@babel/types');
 const generate = require('@babel/generator').default;
 const prettifyXml = require('./utils').prettifyXml;
+const nPath = require('path');
 const fs = require('fs-extra');
 
 const componentLiftMethods = {
@@ -19,8 +20,9 @@ const componentLiftMethods = {
 
 const Pages = [];
 
-function loadCSSFromFile(){
-
+function loadCSSFromFile(filePath){
+  const content = fs.readFileSync(filePath, "utf8");
+  sharedState.output.wxss += content;
 }
 
 module.exports = {
@@ -77,8 +79,7 @@ module.exports = {
       }
     } else if (/.css/.test(source)) {
       // console.log(path);
-      console.log(source)
-      loadCSSFromFile();
+      loadCSSFromFile(nPath.resolve(sharedState.sourcePath, '..' , source));
       path.remove();
     }
   },

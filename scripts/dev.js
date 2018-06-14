@@ -97,7 +97,7 @@ class Parser {
     }
     if (/Page|Component/.test(output.type)) {
       fs.writeFile(basePath + '.wxml', output.wxml, () => {})
-      fs.copyFile(srcBasePath + '.css', basePath + '.wxss', () => {})
+      fs.writeFile(basePath + '.wxss', output.wxss, () => {})
     }
   }
 

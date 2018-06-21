@@ -28,6 +28,7 @@ npm run dev
 - [ ] 组件化
    - [x] tag属性的支持
    - [ ] component
+      - [x] defaultProps 转换properties
       - [ ] 组件children
       - [ ] 抽象组件
       - [ ] 组件关系

@@ -6,7 +6,7 @@ class SharedState {
       wxss:'',
       js:'',
       json:'',
-      type:''//App||page||component
+      type:''//App||Page||Component
     }
     this.isTemplate = false
     this.methods = [] //编译文件的类方法

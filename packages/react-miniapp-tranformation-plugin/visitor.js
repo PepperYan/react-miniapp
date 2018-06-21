@@ -1,9 +1,10 @@
 const sharedState = require('./sharedState');
-var t = require('@babel/types');
+const t = require('@babel/types');
 const generate = require('@babel/generator').default;
 const prettifyXml = require('./utils').prettifyXml;
 const nPath = require('path');
 const fs = require('fs-extra');
+const converters = require('./converters');
 
 const componentLiftMethods = {
   created: 1,
@@ -45,6 +46,13 @@ module.exports = {
       path.node.property.name = 'data'
     }
   },
+  AssignmentExpression(path){
+    //转换微信小程序component的properties对象为defaultProps
+    if(path.node.left.property.name === "defaultProps"){
+      // console.log(path.parent);
+      converters.defaultProps(path.node.right.properties)
+    }
+  },
   ClassProperty(path) {
     const propName = path.node.key.name
     if (/window/.test(propName) && path.node.static) {
@@ -58,9 +66,9 @@ module.exports = {
           pages: Pages
         }
       }
-      sharedState.output.json = config
-    }else if(/props/.test){
-      methods.push(t.objectProperty(t.identifier('properties'),path.node.value));
+      sharedState.output.json = config;
+    }else if (/defaultProps/.test(propName) && path.node.static) {
+      converters.defaultProps(path.node.value.properties);
     }
   },
   ImportDeclaration(path) {    

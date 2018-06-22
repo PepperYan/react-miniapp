@@ -1,9 +1,29 @@
 
 const react_miniapp_obj = {
   properties: {
-    name: {
+    aaa: {
+      type: Number,
+      value: 1121
+    },
+    bbb: {
+      type: null,
+      value: null
+    },
+    ccc: {
       type: String,
-      value: 'default value'
+      value: "xxx"
+    },
+    a: {
+      type: Boolean,
+      value: true
+    },
+    f: {
+      type: Array,
+      value: []
+    },
+    ee: {
+      type: Object,
+      value: {}
     }
   }
 }

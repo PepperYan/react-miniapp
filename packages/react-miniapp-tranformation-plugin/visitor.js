@@ -73,7 +73,8 @@ module.exports = {
           pages: Pages
         }
       }
-      sharedState.output.json = config;
+      // TODO 考虑下如何更合理配置
+      sharedState.output.json = config !== ''? config: "{}";
     }else if (/defaultProps/.test(propName) && path.node.static) {
       converters.defaultProps(path.node.value.properties);
       path.remove()

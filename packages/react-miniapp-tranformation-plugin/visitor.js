@@ -37,7 +37,13 @@ module.exports = {
     },
     exit(path) {
       //把该节点从path中移除?
-      path.remove()
+      const call = t.expressionStatement(
+        t.callExpression(
+          t.identifier(sharedState.output.type),
+          [t.objectExpression(sharedState.methods)]
+        )
+      )
+      path.replaceWith(call)
     }
   },
   MemberExpression(path) {    
@@ -51,6 +57,7 @@ module.exports = {
     if(path.node.left.property.name === "defaultProps"){
       // console.log(path.parent);
       converters.defaultProps(path.node.right.properties)
+      path.remove()
     }
   },
   ClassProperty(path) {
@@ -69,16 +76,15 @@ module.exports = {
       sharedState.output.json = config;
     }else if (/defaultProps/.test(propName) && path.node.static) {
       converters.defaultProps(path.node.value.properties);
+      path.remove()
     }
   },
   ImportDeclaration(path) {    
     const source = path.node.source.value
     if (/wechat/.test(source)) {
-      path.remove()
     } else if (/pages/.test(source)) {
       const pagePath = source.replace('./', '')
       Pages.push(pagePath)
-      path.remove()
     } else if (/components/.test(source)) {
       const { specifiers } = path.node
       for(let sp of specifiers){
@@ -88,8 +94,8 @@ module.exports = {
     } else if (/.css/.test(source)) {
       // console.log(path);
       loadCSSFromFile(nPath.resolve(sharedState.sourcePath, '..' , source));
-      path.remove();
     }
+    path.remove()
   },
   ClassMethod: {
     enter(path) {

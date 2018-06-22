@@ -36,18 +36,18 @@ function transform(code, sourcePath) {
   })
   // tranform后, 结果都会写入sharedState.output
   output = sharedState.output;
-  const obj = t.objectExpression(sharedState.methods);
-  output.js = generate(obj).code;
+  // const obj = t.objectExpression(sharedState.methods);
+  output.js = result.code;
   sharedState.reset();
 
-  switch(output.type){
-    case 'App':
-      output.js = CodeWrapper('App', output.js);
-      break;
-    default: //Page
-      output.js = CodeWrapper('Page', output.js);
-      break;
-  }
+  // switch(output.type){
+  //   case 'App':
+  //     output.js = CodeWrapper('App', output.js);
+  //     break;
+  //   default: //Page
+  //     output.js = CodeWrapper('Page', output.js);
+  //     break;
+  // }
 
   return output;
 }

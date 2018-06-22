@@ -1,7 +1,7 @@
-
-const react_miniapp_obj = {
+const e = 'e';
+Page({
   onClick: function () {
-    console.log('test click');
+    console.log('test click' + e);
     this.setData({
       arr: [[{
         id: 3
@@ -18,10 +18,4 @@ const react_miniapp_obj = {
       }]]
     });
   }
-}
-const onLoad = react_miniapp_obj.onLoad
-react_miniapp_obj.onLoad = function(args){
-  if(onLoad !== void 666)
-      onLoad.call(this,args)
-}
-Page(react_miniapp_obj)
+});

@@ -2,9 +2,11 @@ import Page from '../wechat'
 import Comp from '../components/Comp1'
 import './page.css'
 
+const e = 'e'
+
 class P extends Page {
   onClick(){
-    console.log('test click')
+    console.log('test click'+e);
     this.setData({ 
       arr: [
         [{id:3},{id:4}],
@@ -19,7 +21,7 @@ class P extends Page {
         威武
         {
           this.state.arr.map(function(item,index){
-            return item.map(function(item2){
+            return item.map(function(item2,index2){
               return <div>{item2.id}</div>
             })
           })

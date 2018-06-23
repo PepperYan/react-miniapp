@@ -113,14 +113,14 @@ class MapVisitor {
       },
       FunctionExpression(path) {
         path.node.params.forEach((arg, index) => {
-            if (index === 0) self.item = generate(arg).code
-            if (index === 1) self.index = generate(arg).code
+          if (index === 0) self.item = generate(arg).code;
+          if (index === 1) self.index = generate(arg).code;
         })
       },
       ArrowFunctionExpression(path) {
         path.node.params.forEach((arg, index) => {
-            if (index === 0) self.item = generate(arg).code
-            if (index === 1) self.index = generate(arg).code
+          if (index === 0) self.item = generate(arg).code;
+          if (index === 1) self.index = generate(arg).code;
         })
       },
       JSXOpeningElement: {
@@ -133,7 +133,7 @@ class MapVisitor {
             t.jSXAttribute(t.jSXIdentifier('wx:for'), t.stringLiteral(`{{${self.object}}}`)),
             t.jSXAttribute(t.jSXIdentifier('wx:for-item'), t.stringLiteral(`${self.item}`)),
             t.jSXAttribute(t.jSXIdentifier('wx:for-index'), t.stringLiteral(`${self.index || 'index'}`)),
-          ])
+          ]);
   
           path.parent.openingElement = jsx;
         },
@@ -168,7 +168,7 @@ const common = {
         attr.name = t.identifier(WXML_EVENTS[attrName]);
         const funName = generate(attr.value.expression.property).code;
         if (t.isCallExpression(attr.value.expression) || t.isArrowFunctionExpression(attr.value.expression)) {
-            const warningCode = generate(attr.value.expression).code
+            const warningCode = generate(attr.value.expression).code;
             console.log(
               `小程序不支持在模板中使用function/arrow function，因此 '${warningCode}' 不会被编译`
             );
@@ -177,13 +177,13 @@ const common = {
         return;
       }
       if (attrName === 'style') { // 样式转换
-        let tempAttrs = ''
+        let tempAttrs = '';
         attr.value.expression.properties.forEach(style => {
           const key = generate(style.key).code;``
           // TODO 未支持变量转换 'position:{{p}}'
           const value = style.value.value;
           tempAttrs += `${key}:${value}`;
-        })
+        });
         attr.value = t.stringLiteral(`${tempAttrs}`);
       }
     });
@@ -199,7 +199,7 @@ const common = {
       t.isIdentifier(path.node.expression)||  //{}
       t.isBinaryExpression(path.node.expression)  //{1+2}
     ){
-      const code = generate(path.node.expression).code
+      const code = generate(path.node.expression).code;
       if (code === 'this.props.children') {
         const openningTag = t.jsxOpeningElement(t.jsxIdentifier('slot'), [], true);
         path.replaceWith(openningTag);
@@ -210,8 +210,8 @@ const common = {
     
     if (t.isCallExpression(path.node.expression)) { // <div>{  }</div> {}就进入函数调用循环
       if (path.node.expression.callee.property.name === 'map') {
-        const mapAST = parseCode(generate(path.node.expression).code)
-        const instance = new MapVisitor()
+        const mapAST = parseCode(generate(path.node.expression).code);
+        const instance = new MapVisitor();
         traverse(mapAST, Object.assign({},instance.visitor.call(instance)));
         path.replaceWith(t.identifier(instance.return));
       } else {

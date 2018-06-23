@@ -2,7 +2,7 @@ import Component from '../wechat'
 
 class Comp extends Component {
   static defaultProps = {
-    aaa: 1121,
+    aaa: 111,
     bbb: null,
     ccc: "xxx",
     a: true,

@@ -52,29 +52,29 @@ class Parser {
   async parse(){
     const bundle = await rollup.rollup(this.inputOptions);
     const modules = bundle.modules.map(({ id, dependencies, originalCode, code }) => {
-      if (/rollup/.test(id)) return //忽略 rollupPluginBabelHelpers
+      if (/rollup/.test(id)) return; //忽略 rollupPluginBabelHelpers
       return {
         id: id,
         code: originalCode,
         babeled: code,
         dependencies: dependencies.filter(d => {
-          if (!/rollup/.test(d)) return d
+          if (!/rollup/.test(d)) return d;
         })
-      }
+      };
     });
     
 
     const p = modules.map(m => {
       if (m) {
-        return this.codegen.call(this, m.id, m.dependencies, m.code, m.babeled)
+        return this.codegen.call(this, m.id, m.dependencies, m.code, m.babeled);
       }
     })
 
     await Promise.all(p)
 
-    const filePath = path.resolve(sourceDirPath, 'project.config.json')
+    const filePath = path.resolve(sourceDirPath, 'project.config.json');
     if(fs.existsSync(filePath)){
-      fs.copyFile(filePath, this.output + '/project.config.json',() => {})
+      fs.copyFile(filePath, this.output + '/project.config.json',() => {});
     }
   }
 
@@ -82,49 +82,49 @@ class Parser {
     let sourcePath = id;
     let srcPath = id.replace(sourceDirPath, '');
     if (/node_modules/.test(srcPath)) {
-      srcPath = srcPath.replace(path.resolve('node_modules'), '')
-      srcPath = `nodeModules${srcPath}`
+      srcPath = srcPath.replace(path.resolve('node_modules'), '');
+      srcPath = `nodeModules${srcPath}`;
     }
-    const destPath = path.join(this.output, srcPath)
-    if (/wechat.js/.test(destPath)) return
+    const destPath = path.join(this.output, srcPath);
+    if (/wechat.js/.test(destPath)) return;
     await fs.ensureFile(path.resolve(destPath));
-    const output = transform(code, sourcePath, destPath, dependencies)
-    const srcBasePath = id.replace('.js', '')
-    const basePath = destPath.replace('.js', '')
+    const output = transform(code, sourcePath, destPath, dependencies);
+    const srcBasePath = id.replace('.js', '');
+    const basePath = destPath.replace('.js', '');
     if (/Page|App|Component/.test(output.type)) {
-      fs.writeFile(destPath, output.js, () => {})
-      fs.writeFile(basePath + '.json', JSON.stringify(output.json), () => {})
+      fs.writeFile(destPath, output.js, () => {});
+      fs.writeFile(basePath + '.json', JSON.stringify(output.json), () => {});
     }
     if (/Page|Component/.test(output.type)) {
-      fs.writeFile(basePath + '.wxml', output.wxml, () => {})
-      fs.writeFile(basePath + '.wxss', output.wxss, () => {})
+      fs.writeFile(basePath + '.wxml', output.wxml, () => {});
+      fs.writeFile(basePath + '.wxss', output.wxss, () => {});
     }
   }
 
   watch(dir) {
-    const watcher = wt.watch([dir])
+    const watcher = wt.watch([dir]);
     watcher.on('all', info => {
-      logger.warn(`文件变化: ${info.path} 重新编译`)
-      const p = info.path
+      console.warn(`文件变化: ${info.path} 重新编译`);
+      const p = info.path;
       if (/.js|.jsx/.test(p)) {
         //暂时不编译css
-        this.outputOptions = { ...this.outputOptions, input: p }
+        this.outputOptions = { ...this.outputOptions, input: p };
       }
-      this.parse()
+      this.parse();
     })
   }
 }
 
 async function build() {
   try {
-    const parser = new Parser('./src/app.js')
-    await parser.parse()
+    const parser = new Parser('./src/app.js');
+    await parser.parse();
     // await parser.copyRes('./temple')
-    // parser.watch('./src')
+    parser.watch('./src')
   } catch (e) {
-    console.log(chalk.redBright(e))
-    console.log(e)
+    console.log(chalk.redBright(e));
+    console.log(e);
   }
 }
 
-build()
+build();

@@ -26,7 +26,6 @@ function transform(code, sourcePath) {
   })
   // tranform后, 结果都会写入sharedState.output
   output = sharedState.output;
-  // const obj = t.objectExpression(sharedState.methods);
   output.js = result.code;
   sharedState.reset();
 

@@ -42,53 +42,53 @@ module.exports = {
           t.identifier(sharedState.output.type),
           [t.objectExpression(sharedState.methods)]
         )
-      )
-      path.replaceWith(call)
+      );
+      path.replaceWith(call);
     }
   },
   MemberExpression(path) {    
-    const code = generate(path.node).code
+    const code = generate(path.node).code;
     if (code === 'this.state') {
-      path.node.property.name = 'data'
+      path.node.property.name = 'data';
     }
   },
   AssignmentExpression(path){
     //转换微信小程序component的properties对象为defaultProps
     if(path.node.left.property.name === "defaultProps"){
       // console.log(path.parent);
-      converters.defaultProps(path.node.right.properties)
-      path.remove()
+      converters.defaultProps(path.node.right.properties);
+      path.remove();
     }
   },
   ClassProperty(path) {
-    const propName = path.node.key.name
+    const propName = path.node.key.name;
     if (/window/.test(propName) && path.node.static) {
-      let config = {}
+      let config = {};
       path.node.value.properties.forEach(prop => {
-        config[prop.key.name] = prop.value.value
+        config[prop.key.name] = prop.value.value;
       })
       if (sharedState.output.type === 'App') {
         config = {
           window: config,
           pages: Pages
-        }
+        };
       }
       // TODO 考虑下如何更合理配置
       sharedState.output.json = config !== ''? config: "{}";
     }else if (/defaultProps/.test(propName) && path.node.static) {
       converters.defaultProps(path.node.value.properties);
-      path.remove()
+      path.remove();
     }
   },
   ImportDeclaration(path) {    
-    const source = path.node.source.value
+    const source = path.node.source.value;
     if (/wechat/.test(source)) {
     } else if (/pages/.test(source)) {
-      const pagePath = source.replace('./', '')
-      Pages.push(pagePath)
+      const pagePath = source.replace('./', '');
+      Pages.push(pagePath);
     } else if (/components/.test(source)) {
-      const { specifiers } = path.node
-      for(let sp of specifiers){
+      const { specifiers } = path.node;
+      for (let sp of specifiers) {
         const componentName = sp.local.name;
         sharedState.importedComponent[componentName] = source;
       }
@@ -101,13 +101,13 @@ module.exports = {
   ClassMethod: {
     enter(path) {
       const methodName = path.node.key.name;
-      if (methodName === 'render') return
+      if (methodName === 'render') return;
       
       //构造method的ast节点
       const fn = t.ObjectProperty(
         t.identifier(methodName),
         t.functionExpression(null, path.node.params, path.node.body, path.node.generator,path.node.async)
-      )
+      );
 
       //component?
       sharedState.methods.push(fn);
@@ -118,7 +118,7 @@ module.exports = {
         const wxmlAST = path.node.body.body.find(i => i.type === 'ReturnStatement');
         // TODO 使用Dom el转换,而不是直接用小程序el转换
         const wxml = generate(wxmlAST.argument).code;
-        sharedState.output.wxml = wxmlAST && prettifyXml(wxml)
+        sharedState.output.wxml = wxmlAST && prettifyXml(wxml);
         path.remove();
       }
     }

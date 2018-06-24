@@ -2,7 +2,7 @@ Component({
   properties: {
     aaa: {
       type: Number,
-      value: 111
+      value: 1121
     },
     bbb: {
       type: null,

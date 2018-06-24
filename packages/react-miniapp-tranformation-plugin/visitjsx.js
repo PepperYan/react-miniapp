@@ -1,3 +1,9 @@
+/*
+ * @Author: hibad 
+ * @Date: 2018-06-24 10:36:48 
+ * @Last Modified by:   hibad 
+ * @Last Modified time: 2018-06-24 10:36:48 
+ */
 var t = require('@babel/types');
 const wxTags = require('./wx/tag')
 const common = require('./common');

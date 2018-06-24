@@ -1,7 +1,7 @@
 const e = 'e';
 Page({
   onClick: function () {
-    console.log('test click' + e);
+    console.log('test click1' + e);
     this.setData({
       arr: [[{
         id: 3

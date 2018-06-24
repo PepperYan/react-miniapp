@@ -1,3 +1,10 @@
+/*
+ * @Author: hibad 
+ * @Date: 2018-06-24 10:37:20 
+ * @Last Modified by: hibad
+ * @Last Modified time: 2018-06-24 22:15:35
+ * @Description: 
+ */
 const sharedState = require('../sharedState')
 const t = require('@babel/types');
 const generate = require('@babel/generator').default;
@@ -20,11 +27,14 @@ const typeMap = {
 	NullLiteral: "null"
 }
 
-module.exports = function(properties) {
+/**
+ * convert defaultProps to Component Properties
+ * @param {Array} properties AssignmentExpression right properties || ClassProperty's property (Array of objectProperty)
+ */
+module.exports = function (properties) {
   if(sharedState.output.type !== 'Component'){
     throw new Error('Only Component can use defaultProps, please check wechat miniapp doc/Component chapter for details')
 	} 
-	
 	var astList = []
 	properties.forEach(function(el){
 		const propertyAst = t.objectProperty(
@@ -43,7 +53,7 @@ module.exports = function(properties) {
 		astList.push(propertyAst)
 	})
 
-	sharedState.methods.push(
+	sharedState.compiled.methods.push(
 		t.objectProperty(
 			t.identifier('properties'), 
 			t.objectPattern(astList)

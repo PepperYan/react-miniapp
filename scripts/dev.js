@@ -1,3 +1,9 @@
+/*
+ * @Author: hibad 
+ * @Date: 2018-06-24 10:37:04 
+ * @Last Modified by: hibad
+ * @Last Modified time: 2018-06-24 22:41:00
+ */
 const rollup = require('rollup');
 const resolve = require('rollup-plugin-node-resolve')
 const rBabel =  require('rollup-plugin-babel');
@@ -119,8 +125,8 @@ async function build() {
   try {
     const parser = new Parser('./src/app.js');
     await parser.parse();
-    // await parser.copyRes('./temple')
-    parser.watch('./src')
+    // 暂时关闭watch方便开发
+    // parser.watch('./src')
   } catch (e) {
     console.log(chalk.redBright(e));
     console.log(e);

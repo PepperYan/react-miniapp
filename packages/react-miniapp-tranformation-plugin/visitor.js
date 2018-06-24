@@ -1,3 +1,9 @@
+/*
+ * @Author: hibad 
+ * @Date: 2018-06-24 10:36:07 
+ * @Last Modified by: hibad
+ * @Last Modified time: 2018-06-24 22:55:01
+ */
 const sharedState = require('./sharedState');
 const t = require('@babel/types');
 const generate = require('@babel/generator').default;
@@ -36,11 +42,11 @@ module.exports = {
       }
     },
     exit(path) {
-      //把该节点从path中移除?
+      // 把该节点从path中移除?
       const call = t.expressionStatement(
         t.callExpression(
           t.identifier(sharedState.output.type),
-          [t.objectExpression(sharedState.methods)]
+          [t.objectExpression(sharedState.compiled.methods)]
         )
       );
       path.replaceWith(call);
@@ -48,14 +54,14 @@ module.exports = {
   },
   MemberExpression(path) {    
     const code = generate(path.node).code;
-    if (code === 'this.state') {
+    if (code === 'this.state' && sharedState.walkingMethod !== 'constructor') {
       path.node.property.name = 'data';
     }
   },
   AssignmentExpression(path){
-    //转换微信小程序component的properties对象为defaultProps
+    // 转换微信小程序component的properties对象为defaultProps
     if(path.node.left.property.name === "defaultProps"){
-      // console.log(path.parent);
+      if(sharedState.output.type !== 'Component') return;
       converters.defaultProps(path.node.right.properties);
       path.remove();
     }
@@ -76,6 +82,7 @@ module.exports = {
       // TODO 考虑下如何更合理配置
       sharedState.output.json = config !== ''? config: "{}";
     }else if (/defaultProps/.test(propName) && path.node.static) {
+      if(sharedState.output.type !== 'Component') return; // 只有Component有properties
       converters.defaultProps(path.node.value.properties);
       path.remove();
     }
@@ -93,7 +100,6 @@ module.exports = {
         sharedState.importedComponent[componentName] = source;
       }
     } else if (/.css/.test(source)) {
-      // console.log(path);
       loadCSSFromFile(nPath.resolve(sharedState.sourcePath, '..' , source));
     }
     path.remove()
@@ -101,7 +107,8 @@ module.exports = {
   ClassMethod: {
     enter(path) {
       const methodName = path.node.key.name;
-      if (methodName === 'render') return;
+      sharedState.walkingMethod = methodName;
+      if (methodName === 'render' || methodName === 'constructor') return;
       
       //构造method的ast节点
       const fn = t.ObjectProperty(
@@ -110,7 +117,7 @@ module.exports = {
       );
 
       //component?
-      sharedState.methods.push(fn);
+      sharedState.compiled.methods.push(fn);
     },
     exit(path) {
       const methodName = path.node.key.name;
@@ -120,6 +127,12 @@ module.exports = {
         const wxml = generate(wxmlAST.argument).code;
         sharedState.output.wxml = wxmlAST && prettifyXml(wxml);
         path.remove();
+      } else if (methodName === 'constructor') {
+        for(const body of path.node.body.body ){
+          if(t.isExpressionStatement(body)){
+            converters.componentUtils.dataHandler(body);
+          }
+        }
       }
     }
   }

@@ -1,3 +1,9 @@
+/*
+ * @Author: hibad 
+ * @Date: 2018-06-24 10:36:27 
+ * @Last Modified by:   hibad 
+ * @Last Modified time: 2018-06-24 10:36:27 
+ */
 var visitor = require('./visitor');
 var t = require('@babel/types');
 const visitJsx = require('./visitjsx');

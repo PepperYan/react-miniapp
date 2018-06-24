@@ -1,0 +1,23 @@
+{
+  "name": "react-miniapp-tranformation-plugin",
+  "version": "1.0.0",
+  "description": "a plugin to transfer react app to miniapp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PepperYan/react-miniapp.git"
+  },
+  "keywords": [
+    "react",
+    "miniapp"
+  ],
+  "author": "hibad",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PepperYan/react-miniapp/issues"
+  },
+  "homepage": "https://github.com/PepperYan/react-miniapp#readme"
+}

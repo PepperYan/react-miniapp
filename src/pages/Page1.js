@@ -7,8 +7,15 @@ const e = 'e'
 class P extends Page {
   constructor(props){
     this.state = {
-      items:["hello"]
+      items:["hello"],
+      name:{
+        a:{}
+      }
     }
+    // this.state.name = { a: {}}
+    this.state.name.a.b = "s" // fine
+    this.state.name.ab = "me" // bug1
+    this.state.n = "n" // bug2
   }
 
   onClick(){

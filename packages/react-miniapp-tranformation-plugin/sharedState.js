@@ -2,7 +2,7 @@
  * @Author: hibad 
  * @Date: 2018-06-24 10:36:34 
  * @Last Modified by: hibad
- * @Last Modified time: 2018-06-24 22:17:47
+ * @Last Modified time: 2018-06-25 22:39:18
  */
 
 class SharedState {
@@ -16,7 +16,7 @@ class SharedState {
     }
     this.compiled = {
       methods: [], //编译文件的类方法
-      data: {}, // 小程序Page或者Component的data
+      data: null, // 小程序Page或者Component的data
     }
     this.isTemplate = false
     this.unRecognizeImportedModule = {} //存储非Component的依赖
@@ -34,7 +34,7 @@ class SharedState {
     }
     this.compiled = {
       methods: [],
-      data: {},
+      data: null,
     }
     this.isTemplate = false
     this.unRecognizeImportedModule = {} 

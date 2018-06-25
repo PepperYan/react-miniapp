@@ -2,7 +2,7 @@
  * @Author: hibad 
  * @Date: 2018-06-24 10:36:07 
  * @Last Modified by: hibad
- * @Last Modified time: 2018-06-24 22:55:01
+ * @Last Modified time: 2018-06-25 22:43:06
  */
 const sharedState = require('./sharedState');
 const t = require('@babel/types');
@@ -130,7 +130,7 @@ module.exports = {
       } else if (methodName === 'constructor') {
         for(const body of path.node.body.body ){
           if(t.isExpressionStatement(body)){
-            converters.componentUtils.dataHandler(body);
+            converters.dataProps.dataHandler(body);
           }
         }
       }

@@ -1,7 +1,7 @@
-const defaultProps = require('./defaultPropsConverter');
-const componentUtils = require('./componentConverter');
+const defaultProps = require('./defaultProps');
+const dataProps = require('./dataProps');
 
 module.exports = {
   defaultProps,
-  componentUtils
+  dataProps
 }

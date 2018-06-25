@@ -13,9 +13,9 @@ class P extends Page {
       }
     }
     // this.state.name = { a: {}}
-    this.state.name.a.b = "s"
-    this.state.name.ab = "me"
-    this.state.n = "n"
+    this.state.name.a.b = "s" // fine
+    this.state.name.ab = "me" // bug1
+    this.state.n = "n" // bug2
   }
 
   onClick(){

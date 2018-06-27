@@ -2,7 +2,7 @@
  * @Author: hibad 
  * @Date: 2018-06-24 10:36:07 
  * @Last Modified by: hibad
- * @Last Modified time: 2018-06-28 00:09:46
+ * @Last Modified time: 2018-06-28 00:52:54
  */
 const sharedState = require('./sharedState');
 const t = require('@babel/types');
@@ -136,7 +136,6 @@ module.exports = {
   ClassMethod: {
     enter(path) {
       const methodName = path.node.key.name;
-      console.log("我先"+methodName)
       sharedState.walkingMethod = methodName;
       if (methodName === 'render') return;
       

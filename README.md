@@ -16,6 +16,7 @@ npm run dev
 ```
 
 ##支持列表
+- [x] constructor 转换data
 - [x] 页面
   - [x] jsx模板转换
     - [x] render函数对map函数多层嵌套支持
@@ -30,8 +31,6 @@ npm run dev
    - [ ] component
       - [x] defaultProps 转换properties
       - [ ] 组件children
-      - [ ] 抽象组件
-      - [ ] 组件关系
       - [ ] behaviors
    - [ ] 无状态组件
       - [ ] 通过外部引入无状态组件
@@ -52,11 +51,11 @@ npm run dev
 - [ ] ui库 
 - [x] 单元测试
 - [x] 项目配置
-- [ ] typing 支持
-- [ ] 工具 watch (增量编译)
-- [ ] CI/CD
-- [ ] COV
-- [ ] 拷贝资源目录
+- [x] 工具 watch (增量编译)
+- [x] 拷贝资源目录
+
+### 本项目已被正美纳入anu
+(anu连接)[https://github.com/RubyLouvre/anu/tree/master/packages/render/miniapp]
 
 ## Licences
 MIT

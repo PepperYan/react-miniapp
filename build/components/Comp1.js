@@ -1,4 +1,13 @@
-Component({
+const onInit = function (config) {
+  if (config.hasOwnProperty("constructor")) {
+    config.constructor.call(config);
+  }
+
+  config.data = obj.state;
+  return config;
+};
+
+Component(onInit({
   properties: {
     aaa: {
       type: Number,
@@ -25,7 +34,7 @@ Component({
       value: {}
     }
   }
-}); // Comp.defaultProps = {
+})); // Comp.defaultProps = {
 //   aaa: 1121,
 //   bbb: null,
 //   ccc: "xxx",

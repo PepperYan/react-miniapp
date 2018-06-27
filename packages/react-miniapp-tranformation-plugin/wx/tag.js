@@ -4,7 +4,7 @@
  */
 
 module.exports = {
-  view: true,
+  view: 'view',
   text: true,
   button: true,
   'scroll-view': 1,

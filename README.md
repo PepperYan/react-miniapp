@@ -57,3 +57,6 @@ npm run dev
 - [ ] CI/CD
 - [ ] COV
 - [ ] 拷贝资源目录
+
+## Licences
+MIT

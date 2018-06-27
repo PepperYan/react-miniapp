@@ -2,10 +2,11 @@
  * @Author: hibad 
  * @Date: 2018-06-24 10:36:07 
  * @Last Modified by: hibad
- * @Last Modified time: 2018-06-25 22:43:06
+ * @Last Modified time: 2018-06-28 00:09:46
  */
 const sharedState = require('./sharedState');
 const t = require('@babel/types');
+const template = require('@babel/template').default;
 const generate = require('@babel/generator').default;
 const prettifyXml = require('./utils').prettifyXml;
 const nPath = require('path');
@@ -35,27 +36,55 @@ function loadCSSFromFile(filePath){
 module.exports = {
   ClassDeclaration: {
     enter(path) {      
-      const superClz = path.node.superClass && path.node.superClass.name;
-      if (superClz) {
-        if (superClz !== 'App' && superClz !== 'Page' && superClz !== 'Component') return;
-        sharedState.output.type = superClz;
+      //取得组件的父类
+      let className = path.node.superClass ? path.node.superClass.name : "";
+      let match = className.match(/\.?(App|Page|Component)/);
+      if (match) {
+        var clazzName = match[1];
+        //取得或清理组件名，组件名可以用于defaultProps
+        sharedState.componentName =
+        clazzName === "Component" ? path.node.id.name : null;
+        sharedState.output.type = clazzName;
       }
     },
     exit(path) {
       // 把该节点从path中移除?
-      const call = t.expressionStatement(
+      /*const call = t.expressionStatement(
         t.callExpression(
           t.identifier(sharedState.output.type),
           [t.objectExpression(sharedState.compiled.methods)]
         )
+      );*/
+      const call = t.expressionStatement(
+        t.callExpression(t.identifier(sharedState.output.type), [
+          t.callExpression(t.identifier("onInit"), [
+            t.objectExpression(sharedState.compiled.methods)
+          ])
+        ])
       );
+      var onInit = template(`const onInit = function (config){
+        if(config.hasOwnProperty("constructor")){
+          config.constructor.call(config)
+        }
+        config.data = obj.state;
+        return config;
+      }`)({});
+      //插入到最前面
+      path.insertBefore(onInit)
+      //可以通过`console.log(generate(call).code)`验证
       path.replaceWith(call);
     }
   },
   MemberExpression(path) {    
-    const code = generate(path.node).code;
-    if (code === 'this.state' && sharedState.walkingMethod !== 'constructor') {
-      path.node.property.name = 'data';
+    //转换constructor与render外的方法中的this.state为this.data
+    if (
+      sharedState.walkingMethod !== "constructor" &&
+      sharedState.walkingMethod !== "render"
+    ) {
+      const code = generate(path.node).code;
+      if (code === "this.state") {
+        path.node.property.name = "data";
+      }
     }
   },
   AssignmentExpression(path){
@@ -107,8 +136,9 @@ module.exports = {
   ClassMethod: {
     enter(path) {
       const methodName = path.node.key.name;
+      console.log("我先"+methodName)
       sharedState.walkingMethod = methodName;
-      if (methodName === 'render' || methodName === 'constructor') return;
+      if (methodName === 'render') return;
       
       //构造method的ast节点
       const fn = t.ObjectProperty(
@@ -128,11 +158,11 @@ module.exports = {
         sharedState.output.wxml = wxmlAST && prettifyXml(wxml);
         path.remove();
       } else if (methodName === 'constructor') {
-        for(const body of path.node.body.body ){
-          if(t.isExpressionStatement(body)){
-            converters.dataProps.dataHandler(body);
-          }
-        }
+        // for(const body of path.node.body.body ){
+        //   if(t.isExpressionStatement(body)){
+        //     converters.dataProps.dataHandler(body);
+        //   }
+        // }
       }
     }
   }

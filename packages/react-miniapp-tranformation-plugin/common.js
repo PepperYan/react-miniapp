@@ -1,8 +1,8 @@
 /*
  * @Author: hibad 
  * @Date: 2018-06-24 10:36:22 
- * @Last Modified by:   hibad 
- * @Last Modified time: 2018-06-24 10:36:22 
+ * @Last Modified by: hibad
+ * @Last Modified time: 2018-06-27 23:51:12
  */
 const t = require('@babel/types');
 const generate = require('@babel/generator').default;
@@ -16,11 +16,11 @@ let cache = {};
 
 function assembleMapTag(tagName,fo, forItem, forIndex, nextNode) {
   const attrs = [
-    t.jSXAttribute(t.jSXIdentifier('wx:for'), t.stringLiteral(`{{${fo}}}`)),
-    t.jSXAttribute(t.jSXIdentifier('wx:for-item'), t.stringLiteral(`${forItem}`)),
+    t.jSXAttribute(t.jsxIdentifier('wx:for'), t.stringLiteral(`{{${fo}}}`)),
+    t.jSXAttribute(t.jsxIdentifier('wx:for-item'), t.stringLiteral(`${forItem}`)),
   ]
   if (forIndex) 
-    attrs.push(t.jSXAttribute(t.jSXIdentifier('wx:for-index'), t.stringLiteral(`${forIndex}`)));
+    attrs.push(t.jSXAttribute(t.jsxIdentifier('wx:for-index'), t.stringLiteral(`${forIndex}`)));
   
   const jsxOpening = t.jsxOpeningElement(t.jsxIdentifier(tagName), attrs);
   const jsxClosing = t.jsxClosingElement(t.jsxIdentifier(tagName));

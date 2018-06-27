@@ -2,7 +2,7 @@
  * @Author: hibad 
  * @Date: 2018-06-24 10:36:14 
  * @Last Modified by: hibad
- * @Last Modified time: 2018-06-26 00:37:41
+ * @Last Modified time: 2018-06-26 08:57:44
  * @Description: 
  */
 
@@ -47,7 +47,8 @@ function dataHandler (expression) {
     } else {
       const stack = []
       _memberIterator(expression.expression.left, stack);
-      _walkData2Insert(expression, stack, sharedState.compiled.data.value.properties, 0);
+      // console.log(stack)
+      _walkData2Insert(expression, stack, sharedState.compiled.data.value.properties, 0); // this.state后的properties
       console.log(generate(sharedState.compiled.data).code)
       // sharedState.compiled.data = t.objectProperty(
       //   t.identifier(property.name),
@@ -57,15 +58,32 @@ function dataHandler (expression) {
   }
 }
 
+/**
+ * @param {*} originExpression 
+ * @param {*} stack 
+ * @param {*} properties 
+ * @param {*} index 
+ */
 function _walkData2Insert(originExpression, stack, properties, index) {
+  const level = 0
+  
   for(const property of properties){
-    if(t.isObjectExpression(property.value) && stack.length - 2 === index){
+    if(level != stack.length - 1){
+      if(property.key.name === stack[index].property.name){
+        _walkData2Insert(originExpression, stack, property.value.properties, ++index);
+      }
+    }
+    if(t.isObjectExpression(property.value) && stack.length - 1 === index){
       if(property.value.properties.length === 0) {  // 如this.state.name.a = {} 但未定义b
         property.value.properties.push(
-          t.objectProperty(t.identifier(stack[index+1].property.name), originExpression.expression.right)
+          t.objectProperty(t.identifier(stack[index].property.name), originExpression.expression.right)
         );
+        return;
+      } else {
+        // _walkData2Insert(originExpression, stack, properties.value.properties, index);
       }
-    } else if(property.key.name === stack[index].property.name){
+    }
+    if(property.key.name === stack[index].property.name){
       _walkData2Insert(originExpression, stack, property.value.properties, ++index);
     }
   }
@@ -76,7 +94,7 @@ function _walkData2Insert(originExpression, stack, properties, index) {
  * @param {*} memberExpression 
  */
 function _memberIterator(memberExpression, stack) {
-  if (t.isThisExpression(memberExpression.object)) {
+  if (t.isThisExpression(memberExpression.object)) { // 可能需要把this.state打入栈
     return;
   } else { //member expression
     stack.unshift(memberExpression);
